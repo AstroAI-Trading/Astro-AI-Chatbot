@@ -62,10 +62,18 @@ ROBOTSTXT_OBEY = True
 
 # Configure item pipelines
 # See https://docs.scrapy.org/en/latest/topics/item-pipeline.html
-#ITEM_PIPELINES = {
-#    "fred_scraping.pipelines.FredScrapingPipeline": 300,
-#}
+ITEM_PIPELINES = {
+   "fred_scraping.pipelines.FredScrapingPipeline": 300,
+   # 'fred_scraping.pipelines.SaveToMySQLPipeline':400,
+}
 
+# by runing this code will aumticly save the data to json format. 
+FEEDS = {
+    'fredData2.json': {'format' : 'json'}
+}
+
+
+SPLASH_URL = 'http://localhost:8050'
 # Enable and configure the AutoThrottle extension (disabled by default)
 # See https://docs.scrapy.org/en/latest/topics/autothrottle.html
 #AUTOTHROTTLE_ENABLED = True
