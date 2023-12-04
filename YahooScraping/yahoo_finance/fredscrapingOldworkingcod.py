@@ -63,16 +63,16 @@ class AstroSpider(scrapy.Spider):
             finally:
                 driver.quit()
 
-        # elif 'finance.yahoo.com' in response.url:
-        #     # Process data from finance.yahoo.com
+        elif 'finance.yahoo.com' in response.url:
+            # Process data from finance.yahoo.com
 
-        #     # Extracting data from the Yahoo Finance page using XPath
-        #     date_elements = response.css('td span::text').getall()
-        #     close_price_elements = response.css('td span::text').getall()
+            # Extracting data from the Yahoo Finance page using XPath
+            date_elements = response.css('td span::text').getall()
+            close_price_elements = response.css('td span::text').getall()
 
-        #     # Combine date and close price data
-        #     yahoo_finance_data = [{'DATE': date, 'CLOSE_PRICE': close_price} for date, close_price in zip(date_elements, close_price_elements)]
+            # Combine date and close price data
+            yahoo_finance_data = [{'DATE': date, 'CLOSE_PRICE': close_price} for date, close_price in zip(date_elements, close_price_elements)]
 
-        #     # Yield records directly without any additional fields
-        #     for record in yahoo_finance_data:
-        #         yield record
+            # Yield records directly without any additional fields
+            for record in yahoo_finance_data:
+                yield record

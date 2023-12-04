@@ -69,7 +69,7 @@ ITEM_PIPELINES = {
 
 # by runing this code will aumticly save the data to json format. 
 FEEDS = {
-    'fredData2.json': {'format' : 'json'}
+    'YahooData.json': {'format' : 'json'}
 }
 
 
