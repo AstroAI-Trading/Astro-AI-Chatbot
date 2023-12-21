@@ -12,6 +12,10 @@ from YahooScraping.yahoo_finance.spiders.yahoo_astro_spider import YahooFinanceS
 from sys import exit
 
 
+def scrape():
+    return
+
+
 def upload(storage_upload: Azure, iterations: int):
     if iterations == 0:
         print('You entered 0 iterations. Will not upload any files.')
