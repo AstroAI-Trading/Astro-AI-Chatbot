@@ -5,15 +5,36 @@ from dotenv import load_dotenv
 from subprocess import run
 from platform import system
 import azure_storage_code.data_extraction as extract
-import requests
 from scrapy.crawler import CrawlerProcess
 from fred_scraping.fred_scraping.spiders.astro_spider import AstroSpider
 from YahooScraping.yahoo_finance.spiders.yahoo_astro_spider import YahooFinanceSpider
 from sys import exit
+from urllib.parse import urlparse
 
 
-def scrape():
-    return
+def scraping_specified_link(link):
+    # create the above function to be able to get the link and run the scrapy and scrapy from either yahoo finance or fred_scraping
+    # just put the link if it is valid link, it should call the spider, if not it should provide a message url is not valid.
+    # return
+
+    # Parse the URL to determine the domain
+    domain = urlparse(link).hostname
+
+    # Check if the domain is from Yahoo Finance or Fred
+    if 'yahoo.com' in domain:
+        spider = YahooFinanceSpider
+    elif 'fred.stlouisfed.org' in domain:
+        spider = AstroSpider
+    else:
+        print(f"Invalid URL: {link}")
+        return
+
+    # Run the Scrapy spider
+    process = CrawlerProcess()
+    process.crawl(spider, start_url=link)
+    process.start()
+
+    print(f"Scraping completed for URL: {link}")
 
 
 def upload(storage_upload: Azure, iterations: int):
@@ -49,6 +70,7 @@ def download(storage_download: Azure, iterations: int) -> None:
         container_name_download = Azure.container_function()
         destination_path = Azure.path_function_download()
         if not sas_token_recorded:
+            # Here in case if the user doesn't have an SAS Token already created
             need_token = True
             sas_prompt = input('Do you have an SAS Token? (y/n) Default n: ')
             if sas_prompt.lower() == 'y':
@@ -58,6 +80,7 @@ def download(storage_download: Azure, iterations: int) -> None:
                     if sas_token and not sas_token.isspace():
                         sas_entered = True
 
+                # Basically means if the function returns false meaning if the SAS Token is invalid
                 need_token = not Azure.sas_token_valid(sas_token, container_name_download)
 
                 print(
@@ -66,6 +89,7 @@ def download(storage_download: Azure, iterations: int) -> None:
             if need_token:
                 sas_token = storage_download.generate_sas(container_name_download, blob_name_download)
                 if sas_token is None:
+                    # Something went wrong if the code goes here.
                     print("An SAS Token couldn't be generated. Exiting now.")
                     break
 
@@ -131,6 +155,7 @@ if __name__ == '__main__':
     print("We're happy you're here.")
     sleep(1.5)
     while True:
+        # Need the options list for providing an easy way to select an option
         options = ['Scrape Data', 'Upload Data', 'Download File', 'Parse Files', 'Perform Linear Regression', 'Exit']
         print('Please choose an option by typing in the number associated with it.')
         for i, option in enumerate(options, start=1):
