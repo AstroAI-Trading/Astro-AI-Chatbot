@@ -1,4 +1,5 @@
 # urls.py
+import json
 
 fred_urls = [
     'https://fred.stlouisfed.org/series/CORESTICKM159SFRBATL',
@@ -13,17 +14,18 @@ fred_urls = [
     # 'https://fred.stlouisfed.org/series/REAINTRATREARAT10Y',
     # 'https://fred.stlouisfed.org/series/MORTGAGE30US',
     # 'https://fred.stlouisfed.org/series/DJIA'
-    
+
     # Add other FRED URLs as needed
 ]
 
 yahoo_finance_urls = [
-    # 'https://finance.yahoo.com/quote/GOOG/history?p=GOOG',
+    'https://finance.yahoo.com/quote/GOOG/history?p=GOOG',
     # Add other Yahoo Finance URLs as needed
 ]
 
+
 # sort_data.py
-import json
+
 
 def sort_and_store_json(input_file, output_file):
     try:
@@ -52,7 +54,6 @@ def sort_and_store_json(input_file, output_file):
         json.dump(sorted_data, file, indent=2)
 
     print(f"Data sorted and stored in '{output_file}'")
-
 
 # Example usage:
 # sort_and_store_json('original_data.json', 'sorted_data.json')
