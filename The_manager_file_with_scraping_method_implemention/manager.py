@@ -32,10 +32,7 @@ def scraping_specified_link(link):
         print(f"Invalid URL: {link}")
         return
 
-    # Run the Scrapy spider
-    process = CrawlerProcess()
-    process.crawl(spider, start_url=link)
-    process.start()
+ 
 
     print(f"Scraping completed for URL: {link}")
 
