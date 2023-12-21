@@ -4,12 +4,23 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="55c59c06-edd3-47b5-9bfa-2c86ea36f79c" name="Changes" comment="" />
+    <list default="true" id="55c59c06-edd3-47b5-9bfa-2c86ea36f79c" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 7
+}</component>
   <component name="ProjectId" id="2YYcEjBSTfcZlo4JmjLXX6mtCzg" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
@@ -17,8 +28,12 @@
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
-    "last_opened_file_path": "C:/Users/AjmalAmir/Downloads/Astro-AI-Chatbot-chatbot-Jacob/fred_scraping"
+    "WebServerToolWindowFactoryState": "false",
+    "git-widget-placeholder": "chatbot-Jacob",
+    "last_opened_file_path": "C:/Users/prask/Desktop/Astro-AI/Astro-AI-Chatbot",
+    "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
@@ -29,7 +44,14 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1700705844988</updated>
+      <workItem from="1701714286595" duration="17000" />
+      <workItem from="1701714373705" duration="48000" />
+      <workItem from="1702239311221" duration="50000" />
+      <workItem from="1702239392516" duration="55000" />
     </task>
     <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
   </component>
 </project>

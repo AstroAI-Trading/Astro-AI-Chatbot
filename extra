@@ -1,0 +1,158 @@
+if __name__ == '__main__':
+    try:
+        load_dotenv(override=True, verbose=True)
+        client_id = os.getenv('client_id')
+        client_secret = os.getenv('client_secret')
+        tenant_id = os.getenv('tenant_id')
+        redirect_uri = os.getenv('redirect_uri')
+        application_uri = os.getenv('application_uri')
+        api_base_url = os.getenv('api_base_url')
+        subscription_id = os.getenv('subscription_id')
+        connection_string = os.getenv('connection_string')
+        account_key = os.getenv('account_key')
+    except Exception as e:
+        print(f'Could not find all env variables {e}')
+        sys.exit(1)
+
+    storage = Azure(client_id_var=client_id, client_secret_var=client_secret, tenant_id_var=tenant_id, redirect_uri_var=redirect_uri, application_uri_var=application_uri, api_base_url_var=api_base_url, subscription_id_var=subscription_id, connection_string_var=connection_string, account_key_var=account_key)
+
+    if not storage.authorize():
+        print('Authorization failed. Exiting.')
+        sys.exit(1)
+    else:
+
+        while True:
+
+            options = ['Upload File', 'Download File', 'Upload Dataframe', 'Parse Files', 'Exit']
+
+            print('Select from the following options. Enter the number associated with it.\n')
+            for i, option in enumerate(options, start=1):
+                print(f'{i}\t{option}')
+
+            try:
+                choice = int(input('Option: '))
+            except ValueError:
+                print('Input is not a number. Try again.')
+                continue
+
+            if 1 <= choice <= len(options):
+                selected_option = options[choice - 1]
+
+                match selected_option:
+                    case 'Upload File':
+                        blob_name = Azure.blob_function()
+                        container_name = Azure.container_function()
+                        file_path = Azure.path_function_upload()
+
+                        if file_path is not None:
+                            storage.upload_file(file_path, container_name, blob_name)
+
+                    case 'Download File':
+                        blob_name = Azure.blob_function()
+                        container_name = Azure.container_function()
+                        destination_path = Azure.path_function_download()
+
+                        token_exists = input('Do you have an SAS Token? (y/n) Default is n: ')
+
+                        if token_exists.lower() == 'y':
+                            token_entered = False
+                            while not token_entered:
+                                sas_token = input('Enter your SAS Token: ')
+                                if not sas_token or sas_token.isspace():
+                                    print("SAS Token wasn't entered. Try again.")
+                                    token_entered = False
+                                else:
+                                    token_entered = True
+                        else:
+                            sas_token = storage.generate_sas(container_name, blob_name)
+                            if sas_token is None:
+                                print('An SAS Token could not be generated. Cannot proceed with downloading the file.')
+
+                        storage.download_file(container_name, sas_token, blob_name, destination_path)
+
+                    case 'Upload Dataframe':
+                        blob_name = Azure.blob_function()
+                        container_name = Azure.container_function()
+                        files = input('Enter the files you want to convert to a dataframe then uploaded. Separate them by spaces and include the correct paths: ')
+                        if not Azure.check_files(files.split()):
+                            print('Not all the files exist. Cannot continue.')
+                        else:
+                            dataframe = Azure.create_dataframe(files.split())
+                            if dataframe is not None:
+                                file_format = input('Do you want to parse the dataframe into a csv or excel file? Enter csv or excel all lowercase: ')
+                                storage.upload_dataframe(dataframe, container_name, blob_name, file_format)
+                            else:
+                                print("Not able to convert files in a pandas dataframe. Sorry :(")
+
+                    case 'Parse Files':
+                        files = input('Enter the files you want to parse. Separate them by spaces and include the correct paths: ')
+
+                        if Azure.check_files(files.split()):
+                            extract.parse_files(files.split())
+                        else:
+                            print('Not all the files exist. Cannot continue.')
+
+                    case 'Exit':
+                        print('Exiting program. Goodbye!')
+                        sys.exit(0)
+            else:
+                print('Invalid number. Try Again.')
+
+
+
+def scrape_upload(storage_upload: Azure, iterations: int) -> None:
+    if iterations == 0:
+        print('You entered 0 iterations. Will not scrape and upload any data.')
+        return
+
+    while iterations > 0:
+        sleep(2.5)
+        url_input = input('Enter the url you would like to scrape or type -1 to quit: ')
+        sleep(2.5)
+        if url_input == '-1':
+            break
+        if 'fred.stlouisfed.org' not in url_input and 'finance.yahoo.com' not in url_input:
+            print('You entered an invalid url. Please enter a url from FRED or Yahoo Finance.')
+            continue
+
+        file_format = input('Enter the format for your file such as json or csv: ')
+        if not file_format or file_format.isspace():
+            print('Nothing was entered for the file format. It will be json.')
+            file_format = 'json'
+
+        sleep(3.2)
+        file_format = file_format.replace('.', '')
+
+        file_name = input('Enter the name for your file: ')
+        if not file_name or file_name.isspace():
+            print('Nothing was entered for the file name. The file name will be output.')
+            file_name = 'output'
+
+        invalid_chars = r'\/:*?"<>|.'
+        file_name = file_name.translate(str.maketrans('', '', invalid_chars))
+        file_name = file_name.replace(' ', '')
+
+        file = f'{file_name}.{file_format}'
+        data = []
+
+        process = CrawlerProcess(settings={
+            'FEED_FORMAT': file_format,
+            'FEED_URI': file
+        })
+
+        sleep(2.5)
+        spider_class = YahooFinanceSpider if 'finance.yahoo.com' in url_input else AstroSpider
+
+        process.crawl(spider_class)
+        process.start()
+        sleep(2.5)
+
+        # if not data:
+        # print('No data was scraped. Cannot continue')
+        # continue
+
+        print('Spider closed. The data will now be uploaded.')
+        container_name_upload = Azure.container_function()
+        data_str = str(data).split()
+        storage_upload.upload_file(data_str, container_name_upload, file)
+        sleep(3.5)

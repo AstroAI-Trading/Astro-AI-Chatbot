@@ -68,6 +68,7 @@ class FredScrapingDownloaderMiddleware:
         crawler.signals.connect(s.spider_opened, signal=signals.spider_opened)
         return s
 
+    @staticmethod
     def process_request(self, request, spider):
         # Called for each request that goes through the downloader
         # middleware.
@@ -80,6 +81,7 @@ class FredScrapingDownloaderMiddleware:
         #   installed downloader middleware will be called
         return None
 
+    @staticmethod
     def process_response(self, request, response, spider):
         # Called with the response returned from the downloader.
 
@@ -99,5 +101,6 @@ class FredScrapingDownloaderMiddleware:
         # - return a Request object: stops process_exception() chain
         pass
 
+    @staticmethod
     def spider_opened(self, spider):
         spider.logger.info("Spider opened: %s" % spider.name)

@@ -8,7 +8,8 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import TimeoutException, NoSuchElementException
-from fred_scraping.spiders.urls import fred_urls, yahoo_finance_urls
+from fred_scraping.fred_scraping.spiders.urls import fred_urls, yahoo_finance_urls
+
 
 class AstroSpider(scrapy.Spider):
     name = 'Astro_Spider'
@@ -16,9 +17,15 @@ class AstroSpider(scrapy.Spider):
         'USER_AGENT': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
     }
     allowed_domains = ['fred.stlouisfed.org', 'finance.yahoo.com']
-    start_urls = fred_urls + yahoo_finance_urls
+    start_urls = fred_urls
+    scraped_data = []
 
-    def parse(self, response):
+    def __init__(self, *args, **kwargs):
+        super(AstroSpider, self).__init__(*args, **kwargs)
+        self.start_urls = [kwargs.get('start_url')]
+        self.scraped_data = [kwargs.get('scraped_data')]
+
+    def parse(self, response, **kwargs):
         if 'fred.stlouisfed.org' in response.url:
             # Process data from fred.stlouisfed.org
 

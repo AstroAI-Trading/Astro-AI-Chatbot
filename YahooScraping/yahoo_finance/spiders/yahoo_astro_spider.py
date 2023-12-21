@@ -1,16 +1,33 @@
+from typing import Iterable
+
 import scrapy
+from scrapy import Request
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.options import Options
+from fred_scraping.fred_scraping.spiders.urls import yahoo_finance_urls
+
 
 class YahooFinanceSpider(scrapy.Spider):
     name = 'yahoo_finance'
     custom_settings = {
         'USER_AGENT': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
     }
-    start_urls = ['https://finance.yahoo.com/quote/GOOG/history?p=GOOG']
+    start_urls = yahoo_finance_urls
+    # start_urls = []
+    scraped_data = []
 
-    def parse(self, response):
+    def __init__(self, *args, **kwargs):
+        super(YahooFinanceSpider, self).__init__(*args, **kwargs)
+        start_url = [kwargs.get('start_url')]
+        scraped_data = [kwargs.get('scraped_data')]
+
+        self.start_urls = [start_url] if start_url is not None else self.logger.warning(
+            'start_url is None. The spider will not start.')
+
+        self.scraped_data = scraped_data if scraped_data is not None else []
+
+    def parse(self, response, **kwargs):
         # Use Selenium to load the page with dynamic content
         options = Options()
         options.headless = True  # Use this line to set headless mode
@@ -35,7 +52,11 @@ class YahooFinanceSpider(scrapy.Spider):
             if date and close_price:
                 yield {
                     'date': date,
-                    'close_price': close_price,
+                    'close_price': close_price
                 }
 
         driver.quit()
+
+    def start_requests(self) -> Iterable[Request]:
+        for url in self.start_urls:
+            yield Request(url=url, callback=self.parse)
