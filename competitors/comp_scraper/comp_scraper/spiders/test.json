@@ -1,0 +1,17 @@
+[
+{"company": "NCSM", "competitors": "NCSM vs. RCON, NINE, MTR, USEG, EPOW, ROCG, ICD, BRN, SPI, and OPTT"},
+{"company": "NCTY", "competitors": "NCTY vs. WTRH, UXIN, STCN, MCHX, ZFOX, RFIL, CISO, DAIO, INSG, and DPRO"},
+{"company": "NDLS", "competitors": "NDLS vs. RRGB, STKS, FAT, THCH, ARKR, GENK, PBPB, NATH, LOCO, and BH"},
+{"company": "NDAQ", "competitors": "NDAQ vs. SNEX, ICE, CME, TROW, TW, LPLA, BBDO, VICI, IBKR, and COIN"},
+{"company": "NDRA", "competitors": "NDRA vs. HSDT, TIVC, NUWE, NRXS, BSGM, BCEL, CANF, ALRN, TRVN, and VERO"},
+{"company": "NDSN", "competitors": "NDSN vs. ATS, AMCR, GGG, SWK, CNHI, PKG, ZBRA, IEX, AOS, and AVY"},
+{"company": "NECB", "competitors": "NECB vs. TSBK, FSBW, TCBX, BLFY, ESSA, HBCP, PVBC, FNWB, HIFS, and WMPN"},
+{"company": "NEGG", "competitors": "NEGG vs. FLWS, TITN, BARK, SBH, WOOF, HEPS, SFIX, TAST, GCO, and CURV"},
+{"company": "NCV", "competitors": "NCV vs. AWP, THQ, ACP, THW, AVK, AFB, AFT, AIF, ARDC, and BGH"},
+{"company": "NE", "competitors": "NE vs. RIG, VAL, PTEN, HP, HPK, AM, YPF, WFRD, CHRD, and ENLC"},
+{"company": "NEE", "competitors": "NEE vs. AEP, D, SO, DUK, NGG, SRE, PCG, EXC, BCE, and XEL"},
+{"company": "NEM", "competitors": "NEM vs. GOLD, AEM, WPM, FNV, GFI, DD, LYB, PPG, DOW, and PKX"},
+{"company": "NEA", "competitors": "NEA vs. AWP, THQ, ACP, THW, AVK, AFB, AFT, AIF, ARDC, and BGH"},
+{"company": "NDP", "competitors": "NDP vs. AWP, THQ, ACP, THW, AVK, AFB, AFT, AIF, ARDC, and BGH"},
+{"company": "NCZ", "competitors": "NCZ vs. AWP, THQ, ACP, THW, AVK, AFB, AFT, AIF, ARDC, and BGH"}
+]
