@@ -1,4 +1,4 @@
-# Scrapy settings for fred_scraping project
+# Scrapy settings for yahoo_finance project
 #
 # For simplicity, this file contains only settings considered important or
 # commonly used. You can find more settings consulting the documentation:
@@ -7,14 +7,14 @@
 #     https://docs.scrapy.org/en/latest/topics/downloader-middleware.html
 #     https://docs.scrapy.org/en/latest/topics/spider-middleware.html
 
-BOT_NAME = "fred_scraping"
+BOT_NAME = "yahoo_finance"
 
-SPIDER_MODULES = ["fred_scraping.spiders"]
-NEWSPIDER_MODULE = "fred_scraping.spiders"
+SPIDER_MODULES = ["yahoo_finance.spiders"]
+NEWSPIDER_MODULE = "yahoo_finance.spiders"
 
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
-#USER_AGENT = "fred_scraping (+http://www.yourdomain.com)"
+#USER_AGENT = "yahoo_finance (+http://www.yourdomain.com)"
 
 # Obey robots.txt rules
 ROBOTSTXT_OBEY = True
@@ -45,13 +45,13 @@ ROBOTSTXT_OBEY = True
 # Enable or disable spider middlewares
 # See https://docs.scrapy.org/en/latest/topics/spider-middleware.html
 #SPIDER_MIDDLEWARES = {
-#    "fred_scraping.middlewares.FredScrapingSpiderMiddleware": 543,
+#    "yahoo_finance.middlewares.YahooFinanceSpiderMiddleware": 543,
 #}
 
 # Enable or disable downloader middlewares
 # See https://docs.scrapy.org/en/latest/topics/downloader-middleware.html
 #DOWNLOADER_MIDDLEWARES = {
-#    "fred_scraping.middlewares.FredScrapingDownloaderMiddleware": 543,
+#    "yahoo_finance.middlewares.YahooFinanceDownloaderMiddleware": 543,
 #}
 
 # Enable or disable extensions
@@ -62,18 +62,10 @@ ROBOTSTXT_OBEY = True
 
 # Configure item pipelines
 # See https://docs.scrapy.org/en/latest/topics/item-pipeline.html
-ITEM_PIPELINES = {
-   "fred_scraping.pipelines.FredScrapingPipeline": 300,
-   # 'fred_scraping.pipelines.SaveToMySQLPipeline':400,
-}
+#ITEM_PIPELINES = {
+#    "yahoo_finance.pipelines.YahooFinancePipeline": 300,
+#}
 
-# by runing this code will aumticly save the data to json format. 
-FEEDS = {
-    'YahooData.json': {'format' : 'json'}
-}
-
-
-SPLASH_URL = 'http://localhost:8050'
 # Enable and configure the AutoThrottle extension (disabled by default)
 # See https://docs.scrapy.org/en/latest/topics/autothrottle.html
 #AUTOTHROTTLE_ENABLED = True

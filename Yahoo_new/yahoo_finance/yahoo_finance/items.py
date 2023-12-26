@@ -6,7 +6,7 @@
 import scrapy
 
 
-class CompScraperItem(scrapy.Item):
+class YahooFinanceItem(scrapy.Item):
     # define the fields for your item here like:
     # name = scrapy.Field()
     pass
