@@ -10,6 +10,31 @@ from fred_scraping.fred_scraping.spiders.astro_spider import AstroSpider
 from YahooScraping.yahoo_finance.spiders.yahoo_astro_spider import YahooFinanceSpider
 from sys import exit
 from urllib.parse import urlparse
+import nbconvert
+
+
+'''
+For Linear Regression (Call Second):
+Start with FMP
+DCF2
+SectorData
+Regression
+'''
+
+'''
+For macro (Call first):
+macro_test
+DCF_assumptions
+'''
+
+'''
+Scrape first
+Then call macro
+Then call linear regression
+Call momentum
+Call DCF_assumptions
+Call DCF2
+'''
 
 
 def scraping_specified_link(link):
@@ -114,8 +139,9 @@ def parse_files() -> None:
     extract.parse_files(files.split())
 
 
-def linear_regression() -> None:
-    return
+# This function is meant to be used outside of manager.py so time doesn't have to be imported in each file
+def program_sleep(seconds: float) -> None:
+    sleep(seconds)
 
 
 def clear_terminal() -> None:
@@ -145,8 +171,7 @@ if __name__ == '__main__':
                     account_key_var=account_key)
 
     if not storage.authorize():
-        print("Couldn't authorize the app.")
-        exit(1)
+        exit("Couldn't authorize the app.")
 
     sleep(2.5)
     clear_terminal()
@@ -156,46 +181,9 @@ if __name__ == '__main__':
     sleep(1.5)
     while True:
         # Need the options list for providing an easy way to select an option
-        options = ['Scrape Data', 'Upload Data', 'Download File', 'Parse Files', 'Perform Linear Regression', 'Exit']
-        print('Please choose an option by typing in the number associated with it.')
-        for i, option in enumerate(options, start=1):
-            print(f'{i}\t{option}')
+        stock_ticker = input('Enter in a stock ticker or type q to quit: ')
+        if stock_ticker.lower() == 'q':
+            exit('Thank you for using the Astro-AI Chatbot.')
 
-        try:
-            choice = int(input('Option: '))
-        except ValueError:
-            print('A whole number was not entered. Please try again.')
-            continue
-
-        sleep(2.5)
-        if 1 <= choice <= len(options):
-            match choice:
-                case 1:
-                    print('Will scrape data here.')
-                case 2:
-                    try:
-                        iterations_upload = int(input('How many times will you be uploading a file: '))
-                    except ValueError:
-                        print('A whole number was not entered. The amount of iterations will be 1.')
-                        iterations_upload = 1
-                    upload(storage, iterations_upload)
-                case 3:
-                    try:
-                        iterations_download = int(input("Enter how many time you'll be downloading a file: "))
-                    except ValueError:
-                        print("A whole number wasn't entered. The amount of iterations will be 1.")
-                        iterations_download = 1
-                    download(storage, iterations_download)
-                case 4:
-                    parse_files()
-                case 5:
-                    linear_regression()
-                case 6:
-                    print('Exiting the program. Thank you for using the Astro-AI Chatbot.')
-                    exit(0)
-        else:
-            print('Invalid Number. Try again.')
-            continue
-
-        sleep(2.5)
-        clear_terminal()
+        sleep(0.8)
+        scraping_specified_link(f'https://finance.yahoo.com/quote/AAPL/financials?p={stock_ticker}')

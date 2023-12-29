@@ -156,3 +156,53 @@ def scrape_upload(storage_upload: Azure, iterations: int) -> None:
         data_str = str(data).split()
         storage_upload.upload_file(data_str, container_name_upload, file)
         sleep(3.5)
+
+
+
+
+options = ['Scrape Data', 'Upload Data', 'Download File', 'Parse Files', 'Perform Linear Regression', 'Exit']
+        print('Please choose an option by typing in the number associated with it.')
+        for i, option in enumerate(options, start=1):
+            print(f'{i}\t{option}')
+
+        try:
+            choice = int(input('Option: '))
+        except ValueError:
+            print('A whole number was not entered. Please try again.')
+            continue
+
+        sleep(2.5)
+        if 1 <= choice <= len(options):
+            match choice:
+                case 1:
+                    scraping_link = input('Enter scraping link: ')
+                    sleep(1.2)
+                    scraping_specified_link(scraping_link)
+                case 2:
+                    try:
+                        iterations_upload = int(input('How many times will you be uploading a file: '))
+                    except ValueError:
+                        print('A whole number was not entered. The amount of iterations will be 1.')
+                        iterations_upload = 1
+                    upload(storage, iterations_upload)
+                case 3:
+                    try:
+                        iterations_download = int(input("Enter how many time you'll be downloading a file: "))
+                    except ValueError:
+                        print("A whole number wasn't entered. The amount of iterations will be 1.")
+                        iterations_download = 1
+                    sleep(1.3)
+                    download(storage, iterations_download)
+                case 4:
+                    parse_files()
+                case 5:
+                    print('Will perform Linear Regression.')
+                case 6:
+                    print('Exiting the program. Thank you for using the Astro-AI Chatbot.')
+                    exit(0)
+        else:
+            print('Invalid Number. Try again.')
+            continue
+
+        sleep(2.5)
+        clear_terminal()
