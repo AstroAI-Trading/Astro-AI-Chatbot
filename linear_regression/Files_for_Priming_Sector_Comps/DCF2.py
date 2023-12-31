@@ -2,7 +2,7 @@ import pandas as pd
 import numpy as np
 
 # Load the financial data from the spreadsheet
-file_path = '/Users/evan/Desktop/chatbot/Regression Testing/venv/bin/MergeManipulationsFMP/Components/MVST_2022_FY_RUNINNG.xlsx'  # Update this path
+file_path = './MVST_2022_FY_RUNINNG.xlsx'
 balance_sheet_sheet_name = 'CONSOLIDATED BALANCE SHEETS'
 balance_sheet = pd.read_excel(file_path, sheet_name=balance_sheet_sheet_name)
 
@@ -49,7 +49,7 @@ def calculate_price_per_year(income_statement, year):
 
 
 # Main execution
-if __name__ == "__main__":
+def main() -> None:
     income_statement = load_financial_data(file_path)
 
     predicted_prices = []
@@ -64,4 +64,4 @@ if __name__ == "__main__":
     })
 
     print(df_predicted_prices)
-current_year = 2022
+# current_year = 2022

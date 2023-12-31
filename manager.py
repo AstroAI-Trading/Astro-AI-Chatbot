@@ -10,8 +10,11 @@ from fred_scraping.fred_scraping.spiders.astro_spider import AstroSpider
 from YahooScraping.yahoo_finance.spiders.yahoo_astro_spider import YahooFinanceSpider
 from sys import exit
 from urllib.parse import urlparse
-import nbconvert
-
+from nbformat import read
+from nbconvert import PythonExporter
+from pathlib import Path
+from requests import get
+from linear_regression.Files_for_Priming_Sector_Comps import comp_momentum, DCF2
 
 '''
 For Linear Regression (Call Second):
@@ -37,12 +40,34 @@ Call DCF2
 '''
 
 
-def scraping_specified_link(link):
+def execute_notebook(notebook_path: Path) -> None:
+    if not notebook_path.is_file():
+        exit('The file path to the notebook does not exist. Ensure that it does before running the program again.')
+
+    with open(notebook_path, 'r', encoding='utf-8') as notebook_file:
+        notebook_content = read(notebook_file, as_version=4)
+
+    python_exporter = PythonExporter()
+
+    python_script, _ = python_exporter.from_notebook_node(notebook_content)
+
+    exec(python_script)
+
+
+def check_scraping_link(link: str) -> bool:
+    response = get(link)
+    return response.ok
+
+
+def scraping_specified_link(link: str) -> None:
     # create the above function to be able to get the link and run the scrapy and scrapy from either yahoo finance or fred_scraping
     # just put the link if it is valid link, it should call the spider, if not it should provide a message url is not valid.
     # return
 
     # Parse the URL to determine the domain
+    if not check_scraping_link(link):
+        exit('The link is not valid. Exiting the program now.')
+
     domain = urlparse(link).hostname
 
     # Check if the domain is from Yahoo Finance or Fred
@@ -173,17 +198,41 @@ if __name__ == '__main__':
     if not storage.authorize():
         exit("Couldn't authorize the app.")
 
-    sleep(2.5)
+    sleep(1.5)
     clear_terminal()
     print('Hello, welcome to the Astro-AI Chatbot.')
-    sleep(2.5)
+    sleep(0.3)
     print("We're happy you're here.")
-    sleep(1.5)
+    sleep(0.7)
     while True:
         # Need the options list for providing an easy way to select an option
         stock_ticker = input('Enter in a stock ticker or type q to quit: ')
         if stock_ticker.lower() == 'q':
             exit('Thank you for using the Astro-AI Chatbot.')
 
-        sleep(0.8)
+        sleep(0.5)
+        # Call scrape step is checked
         scraping_specified_link(f'https://finance.yahoo.com/quote/AAPL/financials?p={stock_ticker}')
+        sleep(0.5)
+        macro_notebook_path = './macro/macro_notebook.ipynb'
+        # Macro step is checked
+        execute_notebook(Path(macro_notebook_path).absolute().resolve())
+        sleep(0.4)
+        regression_notebook_path = './linear_regression/Files for Priming_Sector Comps/Regression.ipynb'
+        # Called Regression Here
+        execute_notebook(Path(regression_notebook_path).absolute().resolve())
+        sleep(0.4)
+        # Called momentum here. Keep in mind it's temporary
+        comp_momentum.main()
+        dcf_assumptions_path = './macro/DCF_assumptions.ipynb'
+        # Executed dcf assumptions here
+        execute_notebook(Path(dcf_assumptions_path).absolute().resolve())
+        sleep(0.3)
+        # Execute DCF2
+        DCF2.main()
+
+        '''
+        Someone needs to test this code out as the nbcovert library is not working
+        on my machine, and I couldn't find a solution from chatgpt nor the google. I need to know if this is 
+        a me issue or a library issue.
+        '''
