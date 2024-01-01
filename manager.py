@@ -15,6 +15,9 @@ from nbconvert import PythonExporter
 from pathlib import Path
 from requests import get
 from linear_regression.Files_for_Priming_Sector_Comps import comp_momentum, DCF2
+import pandas as pd
+from collections import OrderedDict
+
 
 '''
 For Linear Regression (Call Second):
@@ -55,22 +58,23 @@ def execute_notebook(notebook_path: Path) -> None:
 
 
 def check_scraping_link(link: str) -> bool:
-    response = get(link)
-    return response.ok
+    try:
+        headers = {
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
+        }
+        response = get(link, headers=headers)
+        print(f"Checking URL: {link} - Status Code: {response.status_code}")
+        return response.ok
+    except Exception as e:
+        print(f"Error checking URL: {link} - Error: {e}")
+        return False
+
 
 
 def scraping_specified_link(link: str) -> None:
-    # create the above function to be able to get the link and run the scrapy and scrapy from either yahoo finance or fred_scraping
-    # just put the link if it is valid link, it should call the spider, if not it should provide a message url is not valid.
-    # return
-
-    # Parse the URL to determine the domain
-    if not check_scraping_link(link):
-        exit('The link is not valid. Exiting the program now.')
-
     domain = urlparse(link).hostname
 
-    # Check if the domain is from Yahoo Finance or Fred
+    # Determine the appropriate spider based on the domain
     if 'yahoo.com' in domain:
         spider = YahooFinanceSpider
     elif 'fred.stlouisfed.org' in domain:
@@ -79,12 +83,13 @@ def scraping_specified_link(link: str) -> None:
         print(f"Invalid URL: {link}")
         return
 
-    # Run the Scrapy spider
+    # Run the Scrapy spider without checking the URL
     process = CrawlerProcess()
     process.crawl(spider, start_url=link)
     process.start()
 
     print(f"Scraping completed for URL: {link}")
+
 
 
 def upload(storage_upload: Azure, iterations: int):
@@ -206,27 +211,25 @@ if __name__ == '__main__':
     sleep(0.7)
     while True:
         # Need the options list for providing an easy way to select an option
-        '''
         stock_ticker = input('Enter in a stock ticker or type q to quit: ')
         if stock_ticker.lower() == 'q':
             exit('Thank you for using the Astro-AI Chatbot.')
-
-        '''
-        
         sleep(0.5)
         # Call scrape step is checked
-        scraping_specified_link('https://finance.yahoo.com/quote/AAPL/financials?p=AAPL')
+        scraping_specified_link(f'https://finance.yahoo.com/quote/{stock_ticker}/financials?p={stock_ticker}')
         sleep(0.5)
-        macro_notebook_path = './macro/macro_notebook.ipynb'
+        '''
+        macro_notebook_path = './macro/macro_test.ipynb'
         # Macro step is checked
         execute_notebook(Path(macro_notebook_path).absolute().resolve())
         sleep(0.4)
-        regression_notebook_path = './linear_regression/Files for Priming_Sector Comps/Regression.ipynb'
+        regression_notebook_path = './linear_regression/Files_for_Priming_Sector_Comps/Regression.ipynb'
         # Called Regression Here
         execute_notebook(Path(regression_notebook_path).absolute().resolve())
         sleep(0.4)
         # Called momentum here. Keep in mind it's temporary
         comp_momentum.main()
+        '''
         dcf_assumptions_path = './macro/DCF_assumptions.ipynb'
         # Executed dcf assumptions here
         execute_notebook(Path(dcf_assumptions_path).absolute().resolve())

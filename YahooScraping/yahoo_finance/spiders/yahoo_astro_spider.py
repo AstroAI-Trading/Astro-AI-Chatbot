@@ -19,43 +19,41 @@ class YahooFinanceSpider(scrapy.Spider):
 
     def __init__(self, *args, **kwargs):
         super(YahooFinanceSpider, self).__init__(*args, **kwargs)
-        start_url = [kwargs.get('start_url')]
-        scraped_data = [kwargs.get('scraped_data')]
-
-        self.start_urls = [start_url] if start_url is not None else self.logger.warning(
-            'start_url is None. The spider will not start.')
-
-        self.scraped_data = scraped_data if scraped_data is not None else []
+        start_url = kwargs.get('start_url')
+        self.start_urls = [start_url] if start_url else self.logger.warning(
+        'start_url is None. The spider will not start.')
 
     def parse(self, response, **kwargs):
-        # Use Selenium to load the page with dynamic content
         options = Options()
-        options.headless = True  # Use this line to set headless mode
+        options.headless = True
+        driver = None
+        try:
+            driver = webdriver.Chrome(options=options)
+            driver.get(response.url)
 
-        # Specify the path to your Chrome driver executable if it's not in your PATH
-        # driver = webdriver.Chrome(executable_path='/path/to/chromedriver', options=options)
-        driver = webdriver.Chrome(options=options)
-        driver.get(response.url)
+            # Consider using explicit waits here for specific elements if necessary
+            driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+            # Adjust wait time as needed
+            driver.implicitly_wait(10)
 
-        # Scroll to the bottom of the page to load all historical data
-        driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
-        driver.implicitly_wait(60)
+            new_response = scrapy.Selector(text=driver.page_source)
 
-        # Get the updated page content
-        new_response = scrapy.Selector(text=driver.page_source)
+            rows = new_response.css('tbody tr')
+            for row in rows:
+                date = row.css('td:nth-child(1) span::text').get()
+                close_price = row.css('td:nth-child(6) span::text').get()
 
-        rows = new_response.css('tbody tr')
-        for row in rows:
-            date = row.css('td:nth-child(1) span::text').get()
-            close_price = row.css('td:nth-child(6) span::text').get()
+                if date and close_price:
+                    yield {
+                        'date': date,
+                        'close_price': close_price
+                    }
+        except Exception as e:
+            self.logger.error(f'Error occurred: {e}')
+        finally:
+            if driver:
+                driver.quit()
 
-            if date and close_price:
-                yield {
-                    'date': date,
-                    'close_price': close_price
-                }
-
-        driver.quit()
 
     def start_requests(self) -> Iterable[Request]:
         for url in self.start_urls:

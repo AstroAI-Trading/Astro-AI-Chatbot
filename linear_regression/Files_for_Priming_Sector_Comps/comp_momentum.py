@@ -69,12 +69,12 @@ def calculate_weekly_change(df):
 def main() -> None:
     # Load your DataFrame (replace 'file_path' with the actual path)
     # file_path = '/Users/evan/Desktop/chatbot/Regression Testing/venv/bin/MergeManipulationsFMP/Components/MVST_daily.xlsx'
-    file_path = './MVST_2022_FY_RUNINNG.xlsx'  # This is temporary MVST_daily.xlsx was not included in the zip file I received
+    file_path = '..\\Astro-AI-Chatbot\\linear_regression\\Files_for_Priming_Sector_Comps\\MVST_2022_FY_RUNINNG.xlsx'
     df = pd.read_excel(file_path)
     df['MVST Close'] = pd.to_numeric(df['MVST Close'], errors='raise', downcast='float')
 
     # Convert 'MVST Close' column to numeric (excluding headers)
-    df = convert_to_numeric(df.copy())
+    df = convert_to_numeric(df.copy()) 
 
     # Reverse the DataFrame for easier analysis
     reversed_df = reverse_dataframe(df)
