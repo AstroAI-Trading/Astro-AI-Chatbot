@@ -1,0 +1,97 @@
+<style>
+    .postsContainer {
+        margin-top: 10px;
+        border-top: 1px solid #e0e0e0;
+        padding-top: 10px;
+    }
+    .postsContainer .post {
+        padding: 5px 0;
+        border-bottom: 1px solid #e0e0e0;
+        margin-bottom: 5px;
+    }
+    .postsContainer .post:last-child {
+        border-bottom: none;
+    }
+    .postsContainer .post h3 {
+        margin-top: 0;
+        font-size: 16px;
+    }
+    .postsContainer .post p {
+        margin: 5px 0;
+        color: #555;
+    }
+    .group {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        border: 1px solid #e0e0e0;
+        padding: 20px;
+        margin-bottom: 15px;
+        border-radius: 8px;
+        transition: background-color 0.3s;
+        color: #16163F;
+        max-width: 100%;  /* Optionally set a max-width so the groups don't take the full page width */
+        margin-left: auto;
+        margin-right: auto;
+    }
+    .group:hover {
+        background-color: #f9f9f9;
+    }
+    .group h3 {
+        margin: 0;
+    }
+    .group-actions {
+        margin-top: 15px;
+    }
+    .group-actions button {
+        padding: 10px 15px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+    .join-btn {
+        background-color: #4B7BFF;
+        color: white;
+    }
+    .join-btn:hover{
+        background-color: #3161E0;
+        color: white;
+        transition: background-color 0.3s ease;
+    }
+    .leave-btn {
+        background-color: #FF4B4B;
+        color: white;
+    }
+    .leave-btn:hover{
+        background-color: #E02121;
+        color: white;
+        transition: background-color 0.3s ease;
+    }
+    .view-posts-btn {
+        background-color: #c2fe00;
+        color: #16163F;
+    }
+    .view-posts-btn:hover {
+        background-color: #16163F;
+        color: #fff;
+    }
+</style>
+{% csrf_token %}
+{% for group in groups %}
+    <div class="group">
+        <h3>{{ group.name }}</h3>
+        <p>{{ group.description }}</p>
+        <div class="group-actions">
+            <!-- View Posts button -->
+            <button class="view-posts-btn" data-groupid="{{ group.id }}">View Posts</button>
+            <!-- Join/Leave buttons -->
+            {% if user not in group.users.all %}
+                <button class="join-btn" data-groupid="{{ group.id }}">Join Group</button>
+            {% else %}
+                <button class="leave-btn" data-groupid="{{ group.id }}">Leave Group</button>
+            {% endif %}
+        </div>
+        <div class="postsContainer" data-groupid="{{ group.id }}">
+        </div>
+    </div>
+{% endfor %}

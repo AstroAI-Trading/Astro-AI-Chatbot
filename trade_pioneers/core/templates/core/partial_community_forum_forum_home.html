@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Forum Home</title>
+    <style>
+        /* Posts Container */
+        .posts-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            height: auto;
+            overflow-y: auto;
+        }
+    
+        /* Individual Post */
+        .post {
+            background-color: #ffffff;
+            padding: 20px;
+            box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            width: 75%;
+            margin: 20px 0;
+            box-sizing: border-box;
+        }
+    
+        .post-content, .post p, .post h3 {
+            color: #16163F;
+        }
+    
+        .post h3, .post p {
+            font-family: Arial, sans-serif;
+            margin-bottom: 10px;
+        }
+    
+        .post h3 {
+            font-weight: bold;
+        }
+    
+        /* Post Actions */
+        .post .post-actions {
+            margin-bottom: 15px;
+        }
+    
+        .post .post-actions button {
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-right: 5px;
+        }
+    
+        .post .post-actions .like-button {
+            background-color: #16163f;
+            color: #fff;
+        }
+
+        .post .post-actions .like-button[data-liked='true'] {
+            background-color: #fff;
+            color: #16163f;
+        }
+    
+        .post .post-actions .comment-button {
+            background-color: #C2FE00;
+            color: #16163f;
+        }
+
+        .post .post-actions .comment-button[data-comment-section-visible='true'] {
+            background-color: #16163f;
+            color: #C2FE00;
+        }
+    
+        /* Comment Section & Textarea */
+        .comment-section {
+            display: none;
+            margin-bottom: 15px;
+            background-color: #ffffff;
+            padding: 10px;
+            border-radius: 5px;
+            box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.1);
+        }
+    
+        .comment-section textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #e6e6e6;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            font-family: Arial, sans-serif;
+            box-sizing: border-box;
+        }
+    
+        .comment-section button.submit-comment {
+            background-color: #16163f;
+            color: #fff;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+    
+        .comment-section button.submit-comment:hover {
+            background-color: #0b0b2a;
+        }
+    
+        /* Comments List */
+        .comments-list {
+            background-color: #f5f5f5;
+            padding: 10px;
+            border-radius: 5px;
+            box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.05); 
+        }
+    
+        .comments-list .comment {
+            border-top: 1px solid #e6e6e6;
+            padding: 5px 0;
+            font-size: 0.9em;
+            margin: 10px 0;
+            border-radius: 5px;
+            padding: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 900px;
+            word-wrap: break-word; /* ensure long words or URLs don't stretch the container */
+            flex-wrap: wrap;
+
+        }
+    
+        .comments-list .comment:first-child {
+            border-top: none;
+        }
+    
+        .comments-list .comment .comment-author {
+            font-weight: bold;
+            font-size: 1.1em;
+            margin-right: 10px;
+            font-family: Arial, sans-serif;
+            color: #16163F;
+
+        }
+    
+        .comments-list .comment .comment-content {
+            font-family: Arial, sans-serif;
+            color: #888; 
+            max-width: 70%; /* Adjust as needed */
+
+        }
+
+        .comments-list .comment:hover {
+            background-color: #f8f8f8; /* Slight gray on hover */
+            border-radius: 5px;
+        }
+
+        .comment-section-title h4 {
+            color: #16163F;
+            font-family: Arial, sans-serif;
+            font-weight: bold;
+            margin-bottom: 10px; 
+        }
+
+        .comment-actions {
+            display: flex;
+            gap: 10px;  /* space between Edit and Delete buttons */
+        }
+
+        .edit-comment-button {
+            background-color: #4B7BFF; /* Blue Color */
+            color: #fff;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .edit-comment-button:hover {
+            background-color: #3161E0; /* Darker Blue on Hover */
+        }
+
+        .delete-comment-button {
+            background-color: #FF4B4B; /* Red Color */
+            color: #fff;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .delete-comment-button:hover {
+            background-color: #E02121; /* Darker Red on Hover */
+        }
+
+
+        
+        .edit-post-button, .save-post-button, .delete-button {
+            margin-bottom: 10px;
+        }
+
+        .edit-post-button {
+            background-color: #4B8BFF; /* Blue Color */
+            color: #fff;
+            transition: background-color 0.3s ease;
+        }
+
+        .edit-post-button:hover {
+            background-color: #3161E0; /* Darker Blue on Hover */
+        }
+
+        .save-post-button {
+            background-color: #ffb14b; /* Orange Color */
+            color: #fff;
+            transition: background-color 0.3s ease;
+        }
+
+        .save-post-button:hover {
+            background-color: #c57d1e; /* Darker Orange on Hover */
+        }
+
+        .delete-button {
+            background-color: #FF4B4B; /* Red Color */
+            color: #fff;
+            transition: background-color 0.3s ease;
+        }
+
+        .delete-button:hover {
+            background-color: #E02121; /* Darker Red on Hover */
+        }
+
+
+        .toggle-comment-section {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 1.5em;
+            transition: color 0.3s ease;
+        }
+
+        .toggle-comment-section:hover {
+            color: #888;
+        }
+
+        .post-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+
+        .post-header-actions {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+        }
+
+        .post-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .post-footer-actions {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+        }
+
+
+
+    </style>
+    
+</head>
+<body>
+    <div class="posts-container">
+        {% for post_data in posts %}
+            <div class="post" data-post-id="{{ post_data.post.id }}">
+                <!-- Post Header -->
+                <div class="post-header-actions">
+                        {% if post_data.post.user == request.user %} <!-- Check if the current user is the post author -->
+                            <button class="edit-post-button" data-post-id="{{ post_data.post.id }}">Edit</button>
+                            <button class="save-post-button" style="display: none;">Save</button>
+                            {% endif %}
+                </div>
+                <!-- Post Content -->
+                <div class="post-content">
+                    <p>Group - {{ post_data.post.group.name }}</p>
+
+                    <h3 class="post-title">{{ post_data.post.title }}</h3>
+                    <input type="text" class="edit-post-title" value="{{ post_data.post.title }}" style="display: none;" />
+                        
+                    <p class="post-description">{{ post_data.post.description }}</p>
+                    <input type="text" class="edit-post-description" value="{{ post_data.post.description }}" style="display: none;" />
+                        
+                    <p>By - {{ post_data.post.user.username }} on {{ post_data.post.date_posted|date:"F d, Y" }}</p>
+                </div>
+                <!-- Post Footer -->
+                <div class="post-footer">
+                    <div class="post-actions">
+                        <button class="like-button" data-post-id="{{ post_data.post.id }}" {% if post_data.liked %}data-liked="true"{% else %}data-liked="false"{% endif %}>
+                            {% if post_data.liked %}Unlike{% else %}Like{% endif %}
+                        </button>
+                        <button class="comment-button" data-post-id="{{ post_data.post.id }}">Comment</button>
+                    </div>
+
+                    <div class="post-footer-actions">
+                        {% if post_data.post.user == request.user %}
+                            <button class="delete-button" data-post-id="{{ post_data.post.id }}">Delete</button>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="comment-section-title">
+                    <h4>Comments:</h4>
+                </div>
+                <!-- Comment Section -->
+                <div class="comment-section" data-post-id="{{ post_data.post.id }}">
+                    <textarea class="comment-text" name="commentContent_{{ post_data.post.id }}" id="commentContent_{{ post_data.post.id }}" placeholder="Write a comment..."></textarea>
+                    <button class="submit-comment" data-post-id="{{ post_data.post.id }}">Post</button>
+                </div>
+
+                <!-- List of Comments -->
+                <div class="comments-list">
+                    <button class="toggle-comment-section">
+                        <span class="comment-section-open">&#x25B2;</span> <!-- Upward arrow -->
+                        <span class="comment-section-close" style="display: none;">&#x25BC;</span> <!-- DownwardUpward arrow -->
+                    </button>
+                    {% for comment in post_data.post.comment_set.all %}
+                        {% if not comment.deleted_at %}
+                            <div class="comment">
+                                <span class="comment-author">{{ comment.user.username }}</span>
+                                <span class="comment-content">{{ comment.text }}</span>
+
+                                {% if comment.user == request.user %}
+                                    <div class="comment-actions">
+                                        <button class="edit-comment-button" data-comment-id="{{ comment.id }}">Edit</button>
+                                        <button class="delete-comment-button" data-comment-id="{{ comment.id }}">Delete</button>
+                                        <form class="edit-comment-form" data-comment-id="{{ comment.id }}" style="display: none;">
+                                            {% csrf_token %}
+                                            <textarea name="text">{{ comment.text }}</textarea>
+                                            <button type="submit">Save</button>
+                                        </form>
+                                    </div>
+                                {% endif %}
+
+
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+                           
+            </div>
+        {% endfor %} 
+    </div>
+
+</body>
+</html>

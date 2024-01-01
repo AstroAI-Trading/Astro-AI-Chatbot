@@ -1,0 +1,238 @@
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f0f0f0;
+        margin: 0;
+        padding: 0;
+    }
+    .container {
+        width: 80%;
+        margin: auto;
+        overflow: hidden;
+    }
+    .account-section {
+        background: #fff;
+        margin: 20px 0;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        color: #16163F;  /* This line changes the text color */
+
+    }
+    .account-info, .account-actions, .user-interactions {
+        border-bottom: 1px solid #e0e0e0;
+        padding-bottom: 20px;
+        margin-bottom: 20px;
+    }
+    .edit-info {
+        display: none;
+    }
+    .interaction-section {
+        display: none;
+    }
+    .toggle-btn {
+        background-color: #C2FE00;
+        color: #16163F;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+    .toggle-btn:active {
+        background-color: #16163F;
+        color: #fff;
+    }
+    input[type="submit"] {
+        background-color: #C2FE00;
+        color: #16163F;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+    input[type="submit"]:hover {
+        background-color: #16163F;
+        color: #fff;
+    }
+    input[type="text"], input[type="email"], input[type="password"] {
+        padding: 10px;
+        border-radius: 5px;
+        border: 1px solid #ddd;
+        width: 80%;
+    }
+    h2 {
+        color: #16163F;
+    }
+
+    #toggle-password {
+        background-color: #C2FE00;
+        color: #16163F;
+        padding: 5px 10px; /* Smaller padding */
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 12px; /* Adjust font size */
+        float: right; /* Align to the right */
+
+    }
+
+    #toggle-password:hover {
+        background-color: #16163F;
+        color: #fff;
+    }
+
+
+    .interaction-section {
+        display: none; /* Initially hide all sections */
+        height: 200px; /* Or whatever fixed height you prefer */
+        overflow-y: scroll;
+    }
+
+    /* Example of how to show the posts section by default */
+    #posts {
+        display: block;
+    }
+
+</style>
+
+<style>
+    /* Posts Container */
+   .posts-container {
+       display: flex;
+       flex-direction: column;
+       align-items: center;
+       height: auto;
+       overflow-y: auto;
+       padding: 20px;
+       box-sizing: border-box;
+   }
+   
+   /* Individual Post */
+   .post {
+       background-color: #ffffff;
+       padding: 20px;
+       box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.1);
+       border-radius: 10px;
+       width: 75%;
+       margin: 20px 0;
+       box-sizing: border-box;
+   }
+   
+   /* Post Content */
+   .post-content {
+       padding: 10px;  /* Add padding */
+       font-size: 0.9em;  /* Adjust font size */
+   }
+   
+   .post-content, .post p, .post h3 {
+       color: #16163F;
+   }
+   
+   .post h3 {
+       font-family: Arial, sans-serif;
+       font-weight: bold;
+       font-size: 1.2em;  /* Adjust font size */
+       margin-bottom: 10px;
+   }
+   
+   .post p {
+       font-family: Arial, sans-serif;
+       margin-bottom: 10px;
+       font-size: 0.8em;  /* Adjust font size */
+   }
+   
+   /* Optional: Add some transition for hover effect */
+   .post:hover {
+       box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.1);
+       transform: translateY(-5px);
+       transition: all 0.3s ease;
+   }
+   
+   .active-btn {
+        background-color: #16163F; /* Green background for example */
+        color: white; /* White text color */
+        /* Add any other styling you need for the active state */
+    }
+   
+   
+   </style>
+<div class="container">
+
+    <div class="account-section">
+        <div class="account-info">
+            <h2>Account Information</h2>
+            <p>Username: <span id="username">{{ user.username }}</span></p>
+            <p>Name: <span id="name">{{ user.first_name }} {{ user.last_name }}</span></p>
+            <p>Email: <span id="email">{{ user.email }}</span></p>
+        </div>
+
+        <div class="account-actions">
+            <h2>Edit Information</h2>
+            <form id="edit-info" class="edit-info" method="post" onsubmit="event.preventDefault(); updateAccount();" style="display: none;">
+                {% csrf_token %}
+                <p>
+                    <label for="id_username">Username:</label>
+                    <input type="text" name="username" id="id_username" class="form-control" value="{{ user.username }}" required>
+                </p>
+                <p>
+                    <label for="id_email">Email:</label>
+                    <input type="email" name="email" id="id_email" class="form-control" value="{{ user.email }}" required>
+                </p>
+                <p>
+                    <label for="id_first_name">First Name:</label>
+                    <input type="text" name="first_name" id="id_first_name" class="form-control" value="{{ user.first_name }}" required>
+                </p>
+                <p>
+                    <label for="id_last_name">Last Name:</label>
+                    <input type="text" name="last_name" id="id_last_name" class="form-control" value="{{ user.last_name }}" required>
+                </p>
+                <input type="submit" value="Save Changes">
+            </form>
+            
+            <button id="edit-button" class="toggle-btn" onclick="toggleEdit()">Edit Information</button>
+        </div>
+        
+
+        <div class="user-interactions">
+            <h2>Your Interactions</h2>
+            <button class="toggle-btn" onclick="toggleInteractions('posts')">Your Posts</button>
+            <button class="toggle-btn" onclick="toggleInteractions('comments')">Comments</button>
+            <button class="toggle-btn" onclick="toggleInteractions('likes')">Likes</button>
+        
+            <div id="posts" class="interaction-section">
+                <!-- Your posts will go here -->
+                {% for post in user_posts %}
+                <div>
+                    <p>{{ post.content }}</p>
+                </div> 
+                {% empty %}
+                <p>You have no posts.</p>
+                {% endfor %}
+            </div>
+        
+            <div id="comments" class="interaction-section">
+                <!-- Your comments will go here -->
+                {% for comment in user_comments %}
+                <div>
+                    <p>Comment on post: {{ comment.post.content }}</p>
+                    <p>Comment: {{ comment.content }}</p>
+                </div>
+                {% empty %}
+                <p>You haven't commented on any posts.</p>
+                {% endfor %}
+            </div>
+        
+            <div id="likes" class="interaction-section">
+                <!-- Your likes will go here -->
+                {% for like in user_likes %}
+                <div>
+                    <p>Liked post: {{ like.post.content }}</p>
+                </div>
+                {% empty %}
+                <p>You haven't liked any posts.</p>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+</div>

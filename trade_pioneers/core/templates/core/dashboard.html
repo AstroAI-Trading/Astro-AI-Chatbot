@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load static %}
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Trade Pioneers</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        .main-container {
+            display: flex;
+        }
+
+        .navbar {
+            background-color: #16163F;
+            color: #fff;
+            width: 200px;
+            min-height: 100vh;
+            padding: 20px 10px 10px 10px;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .navbar-logo {
+            display: block;
+            max-width: 150px;  /* Adjust this according to your logo size */
+            margin: 10px auto; /* Center the logo with some margin around it */
+        }
+
+        .nav-button {
+            color: #fff;
+            text-decoration: none;
+            padding: 10px 20px;
+            display: block;
+            transition: background-color 0.3s;
+            font-size: 12px;
+            font-weight: bold;
+            position: relative;
+            border: none; 
+            border-radius: 5px; 
+            cursor: pointer; 
+            background-color: #16163F; 
+            margin-bottom: 10px; /* Add space between each nav item */
+        }
+
+        .nav-button:hover {
+            background-color: #C2FE00;
+            color: #16163F;
+            text-decoration: none; /* Prevent the underlining on hover */
+        }
+
+        .nav-dropdown {
+            display: none;
+            flex-direction: column;
+            position: absolute; 
+            top: 0; 
+            left: 100%; 
+            background-color: #16163F; 
+            width: 200px; 
+            z-index: 1000;
+        }
+        .nav-dropdown-item:hover .nav-dropdown {
+            display: flex;
+        }
+
+        .nav-dropdown-item {
+            position: relative;
+        }
+
+        .nav-dropdown-up {
+            bottom: 100%;  /* positions the dropdown right above its parent */
+            top: auto;     /* reset the default positioning */
+        }
+
+        .nav-button:hover .nav-dropdown {
+            display: flex; 
+        }
+
+        .sections-container {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr); /* 2 equal columns */
+            gap: 10px;
+            margin-left: 0px; /* Adjusting for navbar width + its padding */
+            padding: 20px;
+            width: calc(100% - 210px); /* Subtract navbar width from 100% */
+        }
+
+        .section {
+            height: calc((100vh - 40px) / 2); /* Take up half the viewport height, subtracting the container's padding */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #16163F;
+            border: 2px solid #16163F;
+            box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        .section, .section-link {
+            height: calc((100vh - 40px) / 2); 
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #16163F;
+            border: 2px solid #16163F;
+            box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+            text-decoration: none; /* Remove the default underline from the link */
+            color: inherit; 
+        }
+
+        .section-link:hover {
+            background-color: #16163F;
+            color: #fff;
+            text-decoration: none; /* Prevent the underlining on hover */
+        }
+
+    </style>
+</head>
+<body>
+    <div class="main-container">
+        <div class="navbar">
+            <img src="{% static 'core/logo.png' %}" alt="Trade Pioneers" class="navbar-logo">
+            <div class="nav-dropdown-item">
+                <a href="/dashboard/" class="nav-button">Dashboard</a>
+                <div class="nav-dropdown">
+                    <a href="/astrobot/" class="nav-button">AstroBot</a>
+                    <a href="/community_forum/" class="nav-button">Community Forum</a>
+                    <a href="/real_time_data/" class="nav-button">Real-Time Data</a>
+                    <a href="/top_picks/" class="nav-button">Top Picks</a>
+                </div>
+            </div>        
+            <a href="{% url 'logout_view' %}" class="nav-button">Logout</a>
+        </div>
+    <div class="sections-container">
+        <a href="/astrobot/" class="section section-link">AstroBot</a>
+        <a href="/community_forum/" class="section section-link">Community Forum</a>
+        <a href="/real_time_data/" class="section section-link">Real-Time Data</a>
+        <a href="/top_picks/" class="section section-link">Top Picks</a>
+    </div>
+    
+    <div class="content">
+        <!-- Your content goes here -->
+    </div>
+</body>
+</html>

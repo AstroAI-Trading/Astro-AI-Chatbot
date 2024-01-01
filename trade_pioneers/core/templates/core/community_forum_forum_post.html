@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Forum Home</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+</head>
+    <style>
+        
+        body, html {
+            height: 100%;
+            margin: 0;
+            font-family: Arial, sans-serif;
+            color: #fff;
+            background-color: #fff;
+            font-weight: bold;
+
+        }
+
+        .top-section, .bottom-section {
+            height: 8%;
+            width: 100%;
+            background-color: #16163f;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .top-section {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr); /* 2 equal columns */
+            gap: 20px;
+            align-items: stretch; /* This will make children items take full height */
+
+        }
+
+        .bottom-section {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr); /* 5 equal columns */
+            align-items: stretch; /* This will make children items take full height */
+            gap: 20px;  /* Optional: adds a gap between items for aesthetics */
+        }
+
+        .bottom-section a {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background-color 0.3s;
+            color: #fff; /* Original text color */
+            text-decoration: none; /* Remove underlines from links */
+            height: 100%; /* Take full height */
+            width: 100%; /* Full width to occupy the entire grid cell */
+        }
+
+        .bottom-section a:hover {
+            background-color: #C2FE00;
+            color: #16163F;
+            text-decoration: none;
+        }
+
+        .middle-section {
+            height: 70%;
+            width: 100%;
+            overflow-y: scroll;
+            background-color: #f5f5f5; /* Light grey to visualize the section */
+            min-height: 74vh; /* Ensure it always takes up 70% of the viewport height */
+        }
+
+
+        .nav-item, .bottom-section > div {
+            flex: 1;
+            text-align: center;
+        }
+        .nav {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .nav {
+            position: relative; /* Add this line */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .nav-item {
+            display: flex; /* Using flex to center its content and take full height */
+            align-items: center; /* Vertically center content */
+            justify-content: center; /* Horizontally center content */
+            transition: background-color 0.3s; 
+            height: 100%; /* Take full height */
+        }
+
+        .nav-item:hover {
+            background-color: #C2FE00;
+            color: #16163F;
+            text-decoration: none; /* Prevent the underlining on hover */
+        }
+
+
+
+        .dropdown {
+            display: none;
+            position: absolute;
+            top: 100%; /* Positioned right under .nav-item */
+            left: 0; /* Start from the left edge of .nav-item */
+            width: 100%; /* Stretch across entire .nav-item */
+            background-color: #16163F;
+            color: #C2FE00;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            z-index: 1;
+        }
+
+        .dropdown a {
+            color: #fff; /* Set this to white */
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+        }
+
+        .dropdown a:hover {
+            background-color: #C2FE00;
+            color: #16163F;
+        }
+
+        .nav-item:hover .dropdown {
+            display: block;
+            text-decoration: none; /* Prevent the underlining on hover */
+        }
+
+    </style>
+<body>
+    <!-- Top section -->
+    <div class="top-section">
+        <div class="nav">
+            <div class="nav-item">Menu
+                <div class="dropdown">
+                    <a href="#">My Posts</a>
+                    <a href="#">My Likes</a>
+                    <a href="#">My Comments</a>
+                    <a href="#">My Groups</a>
+                    <a href="#">Astro Posts</a>
+                </div>
+            </div>
+        </div>
+        <!-- Navigation section -->
+        <div class="nav">
+            <div class="nav-item">Astro Groups
+                <div class="dropdown">
+                    <a href="#">Astro Posts</a>
+                    <a href="#">Latest Posts</a>
+                    <a href="#">Popular Posts</a>
+                    <a href="#">Expert Posts</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="middle-section" id="middle-content">
+        <!-- This is where content will be loaded dynamically -->
+        {% include 'core/partial_community_forum_forum_post.html' %}
+    </div>
+    
+
+    <!-- Bottom section -->
+    <div class="bottom-section">
+        <a href="javascript:void(0);" data-content="/community_forum_forum_home/" onclick="loadContent(this)">Home</a>
+        <a href="javascript:void(0);" data-content="/community_forum_forum_groups/" onclick="loadContent(this)">Groups</a>
+        <a href="javascript:void(0);" data-content="/community_forum_forum_post/" onclick="loadContent(this)">Post</a>
+        <a href="javascript:void(0);" data-content="/community_forum_forum_alerts/" onclick="loadContent(this)">Alerts</a>
+        <a href="javascript:void(0);" data-content="/community_forum_forum_account/" onclick="loadContent(this)">Account</a>
+    </div>
+
+ 
+    <script>
+        function loadContent(linkElement) {
+            // Extract the URL from the data-content attribute of the clicked link.
+            const url = linkElement.getAttribute('data-content');
+            
+            $.ajax({
+                url: url,
+                method: 'GET',
+                success: (response) => {
+                    document.getElementById('middle-content').innerHTML = response;
+                },
+                error: (error) => {
+                    console.error("Error loading content:", error);
+                }
+            });
+        }
+    </script>
+</body>
+</html>

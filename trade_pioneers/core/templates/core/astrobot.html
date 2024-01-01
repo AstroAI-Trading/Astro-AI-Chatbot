@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load static %}
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AstroBot - Trade Pioneers</title>
+    <style>
+        body {
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        .main-container {
+            display: flex;
+            height: 100vh;  /* if you want the container to take the full height of the screen */
+        }
+
+        .centered-content {
+            font-size: 40px;
+            font-weight: bold;
+            color: #16163F;
+            flex-grow: 1;  /* allow it to take up remaining space */
+            display: flex;
+            align-items: center;  /* center the text vertically */
+            justify-content: center;  /* center the text horizontally */
+        }
+
+        .navbar {
+            background-color: #16163F;
+            color: #fff;
+            width: 200px;
+            min-height: 100vh;
+            padding: 20px 10px 10px 10px;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .navbar-logo {
+            display: block;
+            max-width: 150px;  /* Adjust this according to your logo size */
+            margin: 10px auto; /* Center the logo with some margin around it */
+        }
+
+        .nav-button {
+            color: #fff;
+            text-decoration: none;
+            padding: 10px 20px;
+            display: block;
+            transition: background-color 0.3s;
+            font-size: 12px;
+            font-weight: bold;
+            position: relative;
+            border: none; 
+            border-radius: 5px; 
+            cursor: pointer; 
+            background-color: #16163F; 
+            margin-bottom: 10px; /* Add space between each nav item */
+        }
+
+        .nav-button:hover {
+            background-color: #C2FE00;
+            color: #16163F;
+            text-decoration: none; /* Prevent the underlining on hover */
+        }
+
+        .nav-dropdown {
+            display: none;
+            flex-direction: column;
+            position: absolute; 
+            top: 0; 
+            left: 100%; 
+            background-color: #16163F; 
+            width: 200px; 
+            z-index: 1000;
+        }
+        .nav-dropdown-item:hover .nav-dropdown {
+            display: flex;
+        }
+
+        .nav-dropdown-item {
+            position: relative;
+        }
+
+        .nav-dropdown-up {
+            bottom: 100%;  /* positions the dropdown right above its parent */
+            top: auto;     /* reset the default positioning */
+        }
+
+        .nav-button:hover .nav-dropdown {
+            display: flex; 
+        }
+
+        .btn {
+            padding: 8px 15px;
+            background-color: #16163F;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+
+        .btn:hover {
+            background-color: #0E0E2A;
+        }
+
+        .flex-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f5f5f5;
+            }
+
+        .chat-container {
+            width: 800px;
+            height: 600px;
+            border: 1px solid #ccc;
+            padding: 10px;
+            background-color: #fafafa;
+            color: #16163F;
+            overflow: hidden;    /* Ensure no overflow from inner contents */
+            display: flex;       /* Used to organize the child elements vertically */
+            flex-direction: column; /* Stack children vertically */
+            border-radius: 10px; /* Optional: for rounded corners */
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Optional: for a slight shadow effect */
+            align-items: center;  /* Center items horizontally */
+
+        }
+
+        .input-area {
+            width: 100%;
+            display: flex;
+            justify-content: center;  /* Center input and button horizontally */
+            gap: 10px;  /* Space between input and button */
+            padding: 20px;  /* Increased padding for larger input area */
+            background-color: #ccc;  /* Matching theme background color */
+        }
+
+        #userInput {
+            width: 70%;  /* Adjust width as needed */
+            padding: 10px;  /* Increased padding for larger input field */
+            font-size: 16px;  /* Larger font size */
+            border-radius: 5px;  /* Rounded corners */
+            border: 1px solid #ccc;  /* Border color */
+            background-color: #fff;  /* White background color for input field */
+        }
+
+        .send-button {
+            padding: 10px 20px;  /* Increased padding for larger button */
+            background-color: #C2FE00;  /* Matching theme background color */
+            color: #16163F;  /* Matching theme text color */
+            font-size: 16px;  /* Larger font size */
+            border: none;  /* Remove border */
+            border-radius: 5px;  /* Rounded corners */
+            cursor: pointer;  /* Pointer cursor on hover */
+            transition: background-color 0.3s;  /* Transition for hover effect */
+        }
+
+        .send-button:hover {
+            background-color: #16163F;  /* Darker background color on hover */
+            color: #fff;
+        }
+        
+        .messages {
+            max-height: 300px;
+            overflow-y: auto;
+            margin-bottom: 10px;
+        }
+
+        .message {
+            margin-bottom: 10px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center; /* Center the messages vertically */
+
+        }
+
+        .user,
+        .bot {
+            border-radius: 5px;
+            padding: 5px 10px;
+            margin: 2px 0;
+            max-width: 80%;
+        }
+
+        .user {
+            align-self: flex-end;
+            background-color: #0E0E2A;
+            color: white;
+        }
+
+        .bot {
+            align-self: flex-start;
+            background-color: #C2FE00;
+            color: black;
+        }
+    </style>
+</head>
+<body>
+    <div class="main-container">
+        <div class="navbar">
+            <img src="{% static 'core/logo.png' %}" alt="Trade Pioneers" class="navbar-logo">
+            <div class="nav-dropdown-item">
+                <a href="/dashboard/" class="nav-button">Dashboard</a>
+                <div class="nav-dropdown">
+                    <a href="/astrobot/" class="nav-button">AstroBot</a>
+                    <a href="/community_forum/" class="nav-button">Community Forum</a>
+                    <a href="/real_time_data/" class="nav-button">Real-Time Data</a>
+                    <a href="/top_picks/" class="nav-button">Top Picks</a>
+                </div>
+            </div>        
+            <a href="{% url 'logout_view' %}" class="nav-button">Logout</a>
+        </div>
+        <div class="centered-content">
+            <div class="flex-container">
+                <div class="chat-container">
+                    <div class="messages" id="messageBox"></div>
+                    <div class="input-area">  <!-- New div for input area -->
+                        <input type="text" id="userInput" placeholder="Type your message...">
+                        <button onclick="sendMessage()" class="send-button">Send</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+
+    <script>
+         async function sendMessage() {  // make this function async
+            const userInput = document.getElementById("userInput");
+            const messageBox = document.getElementById("messageBox");
+
+            if (userInput.value.trim() !== "") {
+                messageBox.innerHTML += `<div class="message"><div class="user">${userInput.value}</div></div>`;
+                const response = await getBotResponse(userInput.value.toLowerCase());  // use await here
+                messageBox.innerHTML += `<div class="message"><div class="bot">${response}</div></div>`;
+                userInput.value = "";
+                messageBox.scrollTop = messageBox.scrollHeight;
+            }
+        }
+
+        async function getStockPrice(stockSymbol) {
+            try {
+                // Using your provided API key
+                const apiUrl = `https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol=${stockSymbol}&interval=5min&apikey=A37YOVLXK8TKQPU0`;
+                const response = await fetch(apiUrl);
+                
+                if (!response.ok) {
+                    throw new Error('Network response was not ok ' + response.statusText);
+                }
+                
+                const data = await response.json();
+                
+                if (data && data["Time Series (5min)"]) {
+                    // Get the latest time frame
+                    const latestTimeFrame = Object.keys(data["Time Series (5min)"])[0];
+                    const latestData = data["Time Series (5min)"][latestTimeFrame];
+                    const latestPrice = latestData["1. open"];
+                    return `The current stock price of ${stockSymbol} is $${latestPrice}.`;
+                } else {
+                    return 'Sorry, I could not fetch the stock price at the moment.';
+                }
+            } catch (error) {
+                console.error('There was a problem with the fetch operation:', error);
+                return 'Sorry, I could not fetch the stock price at the moment.';
+            }
+        }
+        async function getBotResponse(input) {
+            switch (input) {
+                case "hello":
+                    return "Hi there!";
+                case "how are you":
+                    return "I'm just a bot, but thanks for asking!";
+                case "what's your name":
+                    return "Call me AstroBot!";
+                case "what is a stock":
+                    return "A stock represents ownership in a company and constitutes a claim on part of the company’s assets and earnings.";
+                case "how do i buy a stock":
+                    return "To buy stocks, you'll need to open a brokerage account, research the stocks you want to buy, and then place a stock buy order.";
+                case "what is a stock ticker":
+                    return "A stock ticker is a unique series of letters representing a company's stock on an exchange.";
+                case "what is a dividend":
+                    return "A dividend is a distribution of a portion of a company's earnings to its shareholders.";
+                case "what is stock market capitalization":
+                    return "Market capitalization is the total value of a company's outstanding shares of stock.";
+                case "what is a bull market":
+                    return "A bull market is a market condition characterized by a sustained increase in stock prices.";
+                case "what is a bear market":
+                    return "A bear market is a market condition characterized by a sustained decrease in stock prices.";
+                case "what is an ipo":
+                    return "IPO stands for Initial Public Offering, which is the process by which a company becomes publicly traded on a stock exchange.";
+                case "what is a stock exchange":
+                    return "A stock exchange is a venue where stock buyers and sellers can transact.";
+                case "what is the nyse":
+                    return "The NYSE, or New York Stock Exchange, is a large stock exchange based in New York City.";
+                case "what is the nasdaq":
+                    return "The NASDAQ is a global electronic marketplace for buying and selling securities.";
+                case "what is a stock broker":
+                    return "A stock broker is an individual or firm that is licensed to buy and sell stocks on behalf of investors.";
+                case "what is a stock split":
+                    return "A stock split is an action by a company to divide its existing shares into multiple shares to boost liquidity.";
+                case "what is a stock index":
+                    return "A stock index measures and reflects stock market movements by analyzing a selection of stocks.";
+                case "what is a blue chip stock":
+                    return "A blue chip stock is the stock of a well-established, financially sound, and historically secure corporation.";
+                case "what is a penny stock":
+                    return "A penny stock refers to a small company's stock that typically trades for less than $5 per share.";
+                case "what is a growth stock":
+                    return "A growth stock is a share in a company that is anticipated to grow at a rate significantly above the market average.";
+                case "what is a value stock":
+                    return "A value stock is a stock that tends to trade at a lower price relative to its fundamentals.";
+                case "what is a mutual fund":
+                    return "A mutual fund is a type of investment vehicle consisting of a portfolio of stocks, bonds, or other securities.";
+                case "what is an etf":
+                    return "ETF stands for Exchange Traded Fund, which is a type of investment fund traded on stock exchanges.";
+                case "what is a bond":
+                    return "A bond is a fixed income instrument representing a loan made by an investor to a borrower.";
+                case "what are stock options":
+                    return "Stock options give the holder the right to buy or sell shares at a predetermined price.";
+                case "what is short selling":
+                    return "Short selling is the sale of a security not owned by the seller, with the expectation that the price will fall.";
+                case "what is a hedge fund":
+                    return "A hedge fund is a pooled investment fund that trades in relatively liquid assets and undertakes a wide range of investment and trading activities.";
+                case "what is day trading":
+                    return "Day trading involves buying and selling financial instruments within the same trading day.";
+                case "what is swing trading":
+                    return "Swing trading involves holding a position either long or short for more than one trading session, but usually not longer than several weeks or a few months.";
+                case "tell me a joke":
+                    return "Why did the programmer quit his job? Because he didn't get arrays!";
+                case "goodbye":
+                    return "Goodbye! Talk to you soon!";
+                default:
+                    if (input.startsWith('stock price of ')) {
+                        const stockSymbol = input.split(' ').slice(-1)[0];
+                        // Use await to wait for the Promise to resolve
+                        const stockPriceResponse = await getStockPrice(stockSymbol);
+                        return stockPriceResponse;
+                    } else {
+                        return "I'm sorry, I don't understand that.";
+                    }
+            }
+        }
+
+    </script>
+
+    <!-- JavaScript to prevent back button action -->
+    <script type="text/javascript">
+        history.pushState(null, null, location.href);
+        window.onpopstate = function () {
+            history.go(1);
+        };
+    </script>
+</body>
+
+</html>

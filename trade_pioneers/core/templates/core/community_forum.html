@@ -1,0 +1,848 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load static %}
+<head>
+    <meta name="csrf-token" content="{{ csrf_token }}">
+    <title>Community Forum - Trade Pioneers</title>
+    <style>
+        body {
+            background-color: #fff;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        .main-container {
+            display: flex;
+            height: 100vh;  /* if you want the container to take the full height of the screen */
+        }
+
+        .main-content {
+            flex-grow: 1;  /* allow it to take up remaining space */
+            display: flex;
+            flex-direction: column;
+            padding: 10px 10px 20px 10px;
+        }
+
+        .centered-content {
+            font-size: 40px;
+            font-weight: bold;
+            color: #16163F;
+            flex-grow: 1;  /* allow it to take up remaining space */
+            display: flex;
+            align-items: center;  /* center the text vertically */
+            justify-content: center;  /* center the text horizontally */
+        }
+
+        .content-container {
+            flex-grow: 1;
+            width: 100%;  /* Make sure it takes the full width of the main-content */
+            display: flex;
+            flex-direction: row;
+            align-items: flex-start; /* Align items to the top */
+            justify-content: space-evenly;  /* Distribute buttons evenly with maximum space in between */
+            padding-top: 20px;
+            padding-left: 10px;  /* Adding some padding to ensure the buttons aren't stuck to the edges */
+            padding-right: 10px; 
+            flex-wrap: nowrap;  /* Prevent wrapping */
+            box-sizing: border-box;
+
+        }
+        
+        .content-container .nav-button {
+            color: #fff;
+            text-decoration: none;
+            padding: 10px 20px;
+            display: flex;
+            transition: background-color 0.3s;
+            flex-grow: 1; 
+            align-items: center;
+            justify-content: center;
+            margin: 0 10px; 
+            font-size: 12px;
+            font-weight: bold;
+            position: relative;
+            border: none; 
+            border-radius: 5px; 
+            cursor: pointer; 
+            background-color: #16163F; 
+            margin-bottom: 10px; /* Add space between each nav item */
+        }
+
+        .content-container .nav-button:hover {
+            background-color: #C2FE00;
+            color: #16163F;
+            text-decoration: none; /* Prevent the underlining on hover */
+        }
+        
+        #community-forum-text {
+            position: fixed;
+            top: 0; 
+            left: 200px; 
+            width: calc(100% - 200px); /* Adjusted width */
+            height: 100vh; /* This assumes your container and navbar combined take up the entire viewport height */
+            align-items: center; 
+            justify-content: center; 
+            background-color: rgba(255, 255, 255, 1); 
+            font-size: 40px;
+            font-weight: bold;
+            color: #16163F;
+            animation: switchOut 3s forwards;
+            z-index: 2000;
+
+        }
+
+        @keyframes switchOut {
+            from{
+                display: flex;
+            }
+            0%, 99% {
+                opacity: 1;
+            }
+            100% {
+                opacity: 0;
+            }
+            to{
+                display: none;
+            }
+        
+        }
+
+        .box-container {
+            display: grid;
+            grid-template-columns: repeat(1, 1fr); /* 1 equal columns */
+            gap: 2px;
+            padding-left: 20px;
+            padding-bottom: 60px;
+            box-sizing: border-box; /* Ensure padding is included in total width */
+        }
+
+
+        .box {
+            height: 500px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #fff;
+            border: 2px solid #16163F;
+            text-decoration: none; /* Remove underline from the link */
+            color: #16163F;
+            transition: background-color 0.3s;
+        }
+
+        .box:hover {
+            background-color: #16163F;
+            color: #fff;
+            text-decoration: none; /* Prevent the underlining on hover */
+        }
+
+        .navbar {
+            background-color: #16163F;
+            color: #fff;
+            width: 200px;
+            min-height: 90vh;
+            padding: 20px 10px 10px 10px;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .navbar-logo {
+            display: block;
+            max-width: 150px;  /* Adjust this according to your logo size */
+            margin: 10px auto; /* Center the logo with some margin around it */
+        }
+
+        .nav-button {
+            color: #fff;
+            text-decoration: none;
+            padding: 10px 20px;
+            display: block;
+            transition: background-color 0.3s;
+            font-size: 12px;
+            font-weight: bold;
+            position: relative;
+            border: none; 
+            border-radius: 5px; 
+            cursor: pointer; 
+            background-color: #16163F; 
+            margin-bottom: 10px; /* Add space between each nav item */
+        }
+
+        .nav-button:hover {
+            background-color: #C2FE00;
+            color: #16163F;
+            text-decoration: none; /* Prevent the underlining on hover */
+        }
+
+        .nav-dropdown {
+            display: none;
+            flex-direction: column;
+            position: absolute; 
+            top: 0; 
+            left: 100%; 
+            background-color: #16163F; 
+            width: 200px; 
+            z-index: 1000;
+        }
+
+        .nav-dropdown-item:hover .nav-dropdown {
+            display: flex;
+        }
+
+        .nav-dropdown-item {
+            position: relative;
+        }
+
+        .nav-dropdown-up {
+            bottom: 100%;  /* positions the dropdown right above its parent */
+            top: auto;     /* reset the default positioning */
+        }
+
+        .nav-button:hover .nav-dropdown {
+            display: flex; 
+        }
+        
+        .toast {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+
+            background-color: #f5f5f5;
+            color: #16163F;
+            padding: 10px 20px;
+            border-radius: 5px;
+
+            min-width: 200px;
+            min-height: 60px;
+            text-align: center;
+
+            z-index: 9999;
+        }
+
+
+    </style>
+</head>
+<body>
+    <div class="main-container">
+        <div class="navbar">
+            <img src="{% static 'core/logo.png' %}" alt="Trade Pioneers" class="navbar-logo">
+            <div class="nav-dropdown-item">
+                <a href="/dashboard/" class="nav-button">Dashboard</a>
+                <div class="nav-dropdown">
+                    <a href="/astrobot/" class="nav-button">AstroBot</a>
+                    <a href="/community_forum/" class="nav-button">Community Forum</a>
+                    <a href="/real_time_data/" class="nav-button">Real-Time Data</a>
+                    <a href="/top_picks/" class="nav-button">Top Picks</a>
+                </div>
+            </div>        
+            <a href="{% url 'logout_view' %}" class="nav-button">Logout</a>
+        </div>
+        <div class="main-content">
+            <div id="community-forum-text">Community Forum Home</div>
+            <div class="content-container">
+                <a href="/community_forum/" class="nav-button">Home</a>
+                <a href="/community_forum_find_an_astro_group/" class="nav-button">Find an Astro Group</a>
+            </div>
+            <div class="box-container">
+                <div id="forumContent"></div>
+            </div>
+            
+    <div class="toast-message" id="toastMessage"></div>
+
+    <script type="text/javascript">
+        history.pushState(null, null, location.href);
+        window.onpopstate = function () {
+            history.go(1);
+        };
+    
+        function showToast(message) {
+            const existingToast = document.querySelector('.toast');
+            if (existingToast) {
+                existingToast.remove(); // Remove any existing toast
+            }
+    
+            const toast = document.createElement('div');
+            toast.className = 'toast';
+            toast.innerText = message;
+    
+            document.body.appendChild(toast);
+    
+            setTimeout(() => {
+                document.body.removeChild(toast);
+            }, 3000); // 3 seconds.
+        }
+    
+        document.addEventListener("DOMContentLoaded", async function() {
+            const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
+    
+            loadContentForUrl('/community_forum_forum_home/');
+            function initializeCommentsVisibility() {
+                let commentSections = document.querySelectorAll('.comments-list');
+                commentSections.forEach(section => {
+                    let comments = section.querySelectorAll('.comment');
+                    let openIcon = section.querySelector('.comment-section-open');
+                    let closeIcon = section.querySelector('.comment-section-close');
+                    
+                    comments.forEach(comment => comment.style.display = 'none');
+                    if (openIcon) openIcon.style.display = 'none';
+                    if (closeIcon) closeIcon.style.display = 'block';
+
+                    // Add a data attribute to track visibility
+                    section.setAttribute('data-comments-visible', 'false');
+                });
+            }
+
+            async function loadContentForUrl(url) {
+                console.log('Loading content from:', url);
+                try {
+                    const response = await fetch(url);
+                    const content = await response.text();
+                    document.getElementById('forumContent').innerHTML = content;
+                    initializeCommentsVisibility();
+                
+                    // Attach event listeners every time the content is updated.
+                    attachEventListenersToNewContent();
+                } catch (error) {
+                    console.error('Error fetching data:', error);
+                }
+            }
+    
+            function attachEventListenersToNewContent(commentId) {
+                const forumContent = document.getElementById('forumContent');
+    
+                forumContent.addEventListener('click', function(event) {
+                    if (event.target.matches('.like-button')) {
+                        // ... [Like button logic remains unchanged]
+    
+                        const postId = event.target.getAttribute('data-post-id');
+                        const isLiked = event.target.getAttribute('data-liked') === 'true';
+    
+                        fetch(`/like_post/${postId}/`, {
+                            method: "POST",
+                            headers: {
+                                "Content-Type": "application/json",
+                                "X-CSRFToken": csrfToken
+                            },
+                            body: JSON.stringify({})
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.status === "liked") {
+                                event.target.textContent = "Unlike";
+                                event.target.setAttribute('data-liked', 'true');
+                            } else {
+                                event.target.textContent = "Like";
+                                event.target.setAttribute('data-liked', 'false');
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error liking the post:', error);
+                        });
+    
+                    } else if (event.target.matches('.comment-button')) {
+                        const postId = event.target.getAttribute('data-post-id');
+                        const commentSection = document.querySelector(`.comment-section[data-post-id="${postId}"]`);
+                        if (commentSection.style.display === 'none') {
+                            commentSection.style.display = 'block';
+                            event.target.setAttribute('data-comment-section-visible', 'true');
+                        } else {
+                            commentSection.style.display = 'none';
+                            event.target.setAttribute('data-comment-section-visible', 'false');
+                        }
+    
+                    } else if (event.target.matches('.submit-comment')) {
+                        const postId = event.target.getAttribute('data-post-id');
+                        const commentTextElem = event.target.closest('.comment-section').querySelector('.comment-text');
+                        const commentSection = event.target.closest('.comment-section');
+                        const commentsList = commentSection.nextElementSibling;
+                        const comment_content = commentTextElem.value;
+    
+                        if (comment_content.trim() !== "") {
+                            fetch(`/add_comment/${postId}/`, {
+                                method: "POST",
+                                headers: {
+                                    "Content-Type": "application/json",
+                                    "X-CSRFToken": csrfToken
+                                },
+                                body: JSON.stringify({ text: comment_content })
+                            })
+                            .then(response => response.json())
+                            .then(data => {
+                                if (data.status === "comment_added") {
+                                    const commentDiv = document.createElement('div');
+                                    commentDiv.classList.add('comment');
+                                    commentDiv.innerHTML = `
+                                        <span class="comment-author">${data.username}</span>
+                                        <span class="comment-content">${data.content}</span>
+                                    `;
+                                    commentsList.appendChild(commentDiv);
+                                    commentTextElem.value = '';
+    
+                                    showToast('Comment posted successfully!');  // Showing the toast on successful comment addition.
+                                }
+                            })
+                            .catch(error => {
+                                console.error("Error submitting the comment:", error);
+                            });
+                        }
+    
+                    } else if (event.target.matches('.delete-button')) {
+                        const postId = event.target.getAttribute('data-post-id');
+                        const postDiv = document.querySelector(`.post[data-post-id="${postId}"]`);
+    
+                        fetch(`/post/${postId}/delete/`, {
+                            method: "POST",
+                            headers: {
+                                "Content-Type": "application/json",
+                                "X-CSRFToken": csrfToken
+                            }
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.status === "post_deleted") {
+                                postDiv.remove();
+                                showToast('Post was deleted successfully!');
+                            } else {
+                                showToast('Failed to delete the post!');
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error deleting the post:', error);
+                        });
+                    }
+                });
+
+                // Handling the click on the "Edit post" button
+                document.querySelectorAll('.edit-post-button').forEach(button => {
+                    button.addEventListener('click', function() {
+                        const parentPostDiv = this.closest('.post');
+                        
+                        // Hide original title and description
+                        parentPostDiv.querySelector('.post-title').style.display = 'none';
+                        parentPostDiv.querySelector('.post-description').style.display = 'none';
+
+                        // Show edit inputs
+                        parentPostDiv.querySelector('.edit-post-title').style.display = 'block';
+                        parentPostDiv.querySelector('.edit-post-description').style.display = 'block';
+                        parentPostDiv.querySelector('.save-post-button').style.display = 'block';
+                    });
+                });
+
+                // Handling the post edit form submission
+                document.querySelectorAll('.save-post-button').forEach(button => {
+                    button.addEventListener('click', function() {
+                        const parentPostDiv = this.closest('.post');
+                        const postId = parentPostDiv.getAttribute('data-post-id');
+                        const titleInput = parentPostDiv.querySelector('.edit-post-title');
+                        const descriptionInput = parentPostDiv.querySelector('.edit-post-description');
+
+                        // The AJAX call to save the changes to the server
+                        const xhr = new XMLHttpRequest();
+                        xhr.open('POST', `/post/${postId}/edit/`, true);
+                        xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+                        xhr.setRequestHeader('X-CSRFToken', csrfToken);  // Assuming csrfToken is defined elsewhere in your script
+
+                        xhr.onload = function() {
+                            if (xhr.status === 200) {
+                                const response = JSON.parse(xhr.responseText);
+                                if (response.status === "post_edited") {
+                                    // Update UI
+                                    parentPostDiv.querySelector('.post-title').textContent = response.title;
+                                    parentPostDiv.querySelector('.post-description').textContent = 'Description: ' + response.description;
+                                    
+                                    // Toggle visibility
+                                    parentPostDiv.querySelector('.post-title').style.display = 'block';
+                                    parentPostDiv.querySelector('.post-description').style.display = 'block';
+                                    titleInput.style.display = 'none';
+                                    descriptionInput.style.display = 'none';
+                                    parentPostDiv.querySelector('.save-post-button').style.display = 'none';
+
+                                } else {
+                                    console.error("Failed to edit post.");
+                                }
+                            } else {
+                                console.error("Request failed. Returned status:", xhr.status);
+                            }
+                        };
+
+                        // URL encode the data
+                        const data = `title=${encodeURIComponent(titleInput.value)}&description=${encodeURIComponent(descriptionInput.value)}&csrfmiddlewaretoken=${encodeURIComponent(csrfToken)}`;
+                        xhr.send(data);
+                    });
+                });
+
+            
+               // Edit comment
+               forumContent.addEventListener("click", function(event) {
+                    if (event.target.matches('.edit-comment-button')) {
+                        const commentDiv = event.target.closest('.comment');
+                        const commentContent = commentDiv.querySelector('span.comment-content');
+                        const editForm = commentDiv.querySelector('.edit-comment-form');
+                        console.log('Found commentContent:', !!commentContent);
+                        console.log('Found editForm:', !!editForm);
+
+
+                        if (commentContent && editForm) {
+                            // Toggle the display
+                            commentContent.style.display = "none";
+                            editForm.style.display = "block";
+                        }
+                    }
+                });
+    
+                // Submit edited comment
+                forumContent.addEventListener("submit", function(event) {
+                    if (event.target.matches('.edit-comment-form')) {
+                        event.preventDefault();
+
+                        const editForm = event.target;
+                        const commentDiv = editForm.closest('.comment');
+
+                        // Quick validation
+                        if (!commentDiv) {
+                            console.error('Unable to find parent commentDiv for the edit form');
+                            return;
+                        }
+
+                        const commentId = editForm.getAttribute('data-comment-id');
+
+                        const xhr = new XMLHttpRequest();
+                        xhr.open("POST", `/comment/${commentId}/edit/`, true);
+                        xhr.setRequestHeader("X-CSRFToken", csrfToken);
+
+                        xhr.onload = function() {
+                            if (xhr.status >= 200 && xhr.status < 400) {
+                                const response = JSON.parse(xhr.responseText);
+                                const commentContentElement = commentDiv.querySelector('.comment-content');
+                                
+                                if (response.status === "comment_edited" && commentContentElement) {
+                                    commentContentElement.textContent = response.text;
+                                    editForm.style.display = "none";
+                                    commentContentElement.style.display = "block"; // Show the updated comment
+                                    showToast('Comment was edited successfully!');
+                                } else {
+                                    showToast('Failed to edit the comment!');
+                                }
+                            } else {
+                                console.error('Server error:', xhr.responseText);
+                            }
+                        };
+
+                        xhr.onerror = function() {
+                            console.error('Request error:', xhr.responseText);
+                        };
+
+                        const formData = new FormData(editForm);
+                        xhr.send(formData);
+                    }
+                });
+
+                forumContent.addEventListener('click', function(event) {
+                    if (event.target.matches('.toggle-comment-section') || event.target.closest('.toggle-comment-section')) {
+                        let button = event.target.closest('.toggle-comment-section');
+                        let commentsList = button.closest('.comments-list');
+                        let comments = commentsList.querySelectorAll('.comment');
+                        let isOpenIcon = button.querySelector('.comment-section-open');
+                        let isCloseIcon = button.querySelector('.comment-section-close');
+                        
+                        let areCommentsVisible = commentsList.getAttribute('data-comments-visible') === 'true';
+
+                        comments.forEach(comment => {
+                            comment.style.display = areCommentsVisible ? 'none' : '';
+                        });
+
+                        if (isOpenIcon) isOpenIcon.style.display = areCommentsVisible ? 'none' : 'block';
+                        if (isCloseIcon) isCloseIcon.style.display = areCommentsVisible ? 'block' : 'none';
+
+                        // Toggle the data attribute
+                        commentsList.setAttribute('data-comments-visible', areCommentsVisible ? 'false' : 'true');
+                    }
+                });
+
+    
+            }
+            async function joinGroup(event) {
+                const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+                const groupId = event.target.closest(".group").querySelector(".view-posts-btn").getAttribute("data-groupid");
+                const formData = new FormData();
+                formData.append("group_id", groupId);
+
+                try {
+                    const response = await fetch("/join-group/", {
+                        method: "POST",
+                        headers: {
+                            "X-CSRFToken": csrftoken
+                        },
+                        body: formData
+                    });
+
+                    const data = await response.json();
+
+                    if (data.status === "joined") {
+                        const leaveButton = document.createElement('button');
+                        leaveButton.className = "leave-btn";
+                        leaveButton.setAttribute("data-groupid", groupId);
+                        leaveButton.textContent = "Leave Group";
+
+                        event.target.parentNode.replaceChild(leaveButton, event.target);
+                    } else {
+                        alert("Failed to join the group.");
+                    }
+
+                } catch (error) {
+                    console.error("Error joining group:", error);
+                }
+            }
+
+            async function leaveGroup(event) {
+                const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+                const groupId = event.target.closest(".group").querySelector(".view-posts-btn").getAttribute("data-groupid");
+                const formData = new FormData();
+                formData.append("group_id", groupId);
+
+                try {
+                    const response = await fetch("/leave-group/", {
+                        method: "POST",
+                        headers: {
+                            "X-CSRFToken": csrftoken
+                        },
+                        body: formData
+                    });
+
+                    const data = await response.json();
+
+                    if (data.status === "left") {
+                        const joinButton = document.createElement('button');
+                        joinButton.className = "join-btn";
+                        joinButton.setAttribute("data-groupid", groupId);
+                        joinButton.textContent = "Join Group";
+
+                        event.target.parentNode.replaceChild(joinButton, event.target);
+                    } else {
+                        alert("Failed to leave the group.");
+                    }
+
+                } catch (error) {
+                    console.error("Error leaving group:", error);
+                }
+            }
+
+            document.body.addEventListener('click', function(e) {
+                if (e.target.classList.contains('view-posts-btn')) { // Check if the clicked element has the class "view-posts-btn"
+
+                    // Get the group ID from the clicked button
+                    var clickedGroupId = e.target.getAttribute('data-groupid');
+                    var postsContainer = document.querySelector('.postsContainer[data-groupid="' + clickedGroupId + '"]');
+                    var currentGroup = e.target.closest('.group');
+                    var otherGroups = Array.from(document.querySelectorAll('.group')).filter(group => group !== currentGroup);
+
+                    if (e.target.innerText === "View Posts") {
+
+                        // Create an XMLHttpRequest for the AJAX call
+                        var xhr = new XMLHttpRequest();
+                        xhr.open('GET', '/get-group-posts/?group_id=' + clickedGroupId, true);
+
+                        xhr.onload = function() {
+                            if (this.status >= 200 && this.status < 400) {
+                                // Hide all other groups
+                                otherGroups.forEach(group => group.style.display = 'none');
+
+                                // Update the postsContainer for the group with the received posts
+                                if (postsContainer) {
+                                    postsContainer.innerHTML = this.response;
+                                }
+                                e.target.innerText = "Close Posts";  // Change the button text to "Close Posts"
+                            } else {
+                                console.error("Error fetching posts:", this.response);
+                            }
+                        };
+
+                        xhr.onerror = function() {
+                            console.error("Request failed");
+                        };
+
+                        xhr.send();
+
+                    } else {
+                        // If the button text is "Close Posts", show all groups, hide the posts and change the button text back to "View Posts"
+                        otherGroups.forEach(group => group.style.display = '');
+
+                        if (postsContainer) {
+                            postsContainer.innerHTML = "";
+                        }
+                        e.target.innerText = "View Posts";
+                    }
+                }
+            });
+
+            
+            document.addEventListener('click', function(event) {
+                if (event.target.matches('.join-btn')) {
+                    joinGroup(event);
+                }
+
+                if (event.target.matches('.leave-btn')) {
+                    leaveGroup(event);
+                }
+            });
+
+            window.loadContent = function(element) {
+                const url = element.getAttribute('data-content');
+                loadContentForUrl(url);
+            };
+        });
+
+        function toggleEdit() {
+            var editForm = document.getElementById("edit-info");
+            var editButton = document.getElementById("edit-button");
+
+            if (editForm.style.display === "none" || editForm.style.display === "") {
+                editForm.style.display = "block";
+                editButton.style.display = "none";  // Hide the "Edit Information" button
+            } else {
+                editForm.style.display = "none";
+                editButton.style.display = "block";  // Show the "Edit Information" button
+            }
+        }
+
+        function updateAccount() {
+            var formData = new FormData(document.getElementById('edit-info'));
+    
+            fetch('/account/update/', {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    showToast('Success', data.message);
+                } else {
+                    showToast('Error', data.message || 'An unknown error occurred');
+                }
+                toggleEdit(); 
+            })
+            .catch(error => {
+                console.error("Error updating account:", error);
+                showToast('Error', 'An unknown error occurred');
+            });
+        }
+    
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+
+        const csrftoken = getCookie('csrftoken');
+
+        function formatDate(dateString) {
+            const options = { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit' };
+            return new Date(dateString).toLocaleDateString(undefined, options);
+        }
+
+
+        function fetchAndDisplayUserInteractions(url, containerId) {
+            fetch(url, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': csrftoken
+                },
+                credentials: 'include'
+            })
+            .then(response => response.json())
+            .then(data => {
+                const container = document.getElementById(containerId);
+                container.innerHTML = ''; 
+                data.forEach(item => {
+                    let contentHTML = '';
+                    if (containerId === 'posts') {
+                        contentHTML = `
+                            <div class="post">
+                                <h3>${item.title}</h3>
+                                <p>${item.content}</p>
+                                <span>${formatDate(item.date_posted)}</span>
+                            </div>
+                        `;
+                    } else if (containerId === 'comments') {
+                        contentHTML = `
+                            <div class="comment">
+                                <h4>On post: ${item.post_title}</h4>
+                                <p>${item.content}</p>
+                                <span>${formatDate(item.date_commented)}</span>
+                            </div>
+                        `;
+                    } else if (containerId === 'likes') {
+                        contentHTML = `
+                            <div class="like">
+                                <h3>Liked post: ${item.post_title}</h3>
+                            </div>
+                        `;
+                    }
+                    container.innerHTML += contentHTML;
+                });
+            })
+            .catch(error => console.error('Error:', error));
+        }
+
+
+        function toggleInteractions(type) {
+            const sections = document.querySelectorAll('.interaction-section');
+            sections.forEach(section => {
+                section.style.display = 'none'; 
+            });
+
+            const targetSection = document.getElementById(type);
+            if (targetSection) {
+                targetSection.style.display = 'block'; 
+            } else {
+                console.error(`No section found with id: ${type}`);
+                return;
+            }
+
+            const buttons = document.querySelectorAll('.toggle-btn');
+            buttons.forEach(button => {
+                if (button.getAttribute('onclick').includes(type)) {
+                    button.classList.add('active-btn');
+                } else {
+                    button.classList.remove('active-btn');
+                }
+            });
+
+            let url = '';
+            switch(type) {
+                case 'posts':
+                    url = '/interactions/posts/';
+                    break;
+                case 'comments':
+                    url = '/interactions/comments/';
+                    break;
+                case 'likes':
+                    url = '/interactions/likes/';
+                    break;
+                default:
+                    return;
+            }
+
+            fetchAndDisplayUserInteractions(url, type);
+        }
+
+    </script>
+    
+</body>
+</html>

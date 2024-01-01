@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registration - Trade Pioneers</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f5f5f5;
+        }
+
+        .container {
+            width: 300px;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            background-color: #fff;
+        }
+
+        .container h2 {
+            text-align: center;
+            margin-bottom: 15px;
+        }
+
+        .container input {
+            width: 93%;
+            padding: 10px;
+            margin: 15px 0;
+            border: 1px solid #16163F;
+            border-radius: 5px;
+        }
+
+        .container label {
+            margin-top: 10px;
+        }
+
+        .container ul {
+            list-style-type: none;
+            padding-left: 0;
+        }
+
+        .container li {
+            display: flex;
+            align-items: center;
+            margin-bottom: 5px;
+        }
+
+        .container .criteria-met::before {
+            content: '\2713';
+            margin-right: 5px;
+            color: green;
+        }
+
+        .container button {
+            width: 100%;
+            padding: 10px;
+            background-color: #C2FE00;
+            border: none;
+            border-radius: 5px;
+            color: #16163F;
+            cursor: pointer;
+        }
+
+        .container button:hover {
+            background-color: #16163F;
+        }
+
+        .back-button {
+            margin-top: 15px;
+            text-align: center;
+        }
+
+        /* Password strength indicator styles */
+        #password-strength {
+            margin-top: 10px;
+        }
+
+        #strength-text {
+            font-weight: bold;
+        }
+
+        #strength-meter {
+            background-color: #ddd;
+            height: 10px;
+            border-radius: 5px;
+            margin-top: 5px;
+        }
+
+        #strength-bar {
+            height: 100%;
+            width: 0;
+            border-radius: 5px;
+            transition: width 0.6s ease-in-out;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Register</h2>
+        <form action="{% url 'register' %}" method="post" autocomplete="off">
+            {% csrf_token %}
+            
+            <input type="text" name="first_name" placeholder="First Name" required value="{{ form.first_name.value|default:'' }}" autocomplete="off">
+
+            <input type="text" name="last_name" placeholder="Last Name" required value="{{ form.last_name.value|default:'' }}" autocomplete="off">
+
+            <input type="text" name="username" placeholder="Username" required value="{{ form.username.value|default:'' }}" autocomplete="off">
+
+            <input type="password" name="password1" id="password1" placeholder="Password" required value="{{ form.password1.value|default:'' }}" autocomplete="off">
+            
+            <div class="password-criteria">
+                <h3>Password Criteria:</h3>
+                <ul>
+                    <!-- Added criteria-indicator span elements -->
+                    <li id="length-criteria"><span class="criteria-indicator"></span>Minimum 8 characters</li>
+                    <li id="uppercase-criteria"><span class="criteria-indicator"></span>At least one uppercase letter</li>
+                    <li id="lowercase-criteria"><span class="criteria-indicator"></span>At least one lowercase letter</li>
+                    <li id="number-criteria"><span class="criteria-indicator"></span>At least one number</li>
+                    <li id="special-char-criteria"><span class="criteria-indicator"></span>At least one special character</li>
+                </ul>
+            </div>
+            <input type="password" name="password2" id="password2" placeholder="Confirm Password" required value="{{ form.password2.value|default:'' }}" autocomplete="off">
+
+            <div id="password-strength">
+                <span id="strength-text">Password Strength:</span>
+                <div id="strength-meter">
+                    <div id="strength-bar"></div>
+                </div>
+            </div>
+
+            <button type="submit">Register</button>
+        </form>
+        <div class="back-button">
+            <a href="{% url 'login_view' %}">Back to Login</a>
+        </div>
+    </div>
+    
+    <!-- Updated JavaScript section -->
+    <script>
+        const password1 = document.getElementById("password1");
+        const strengthBar = document.getElementById("strength-bar");
+
+        const indicators = {
+            length: document.getElementById("length-criteria").querySelector('.criteria-indicator'),
+            uppercase: document.getElementById("uppercase-criteria").querySelector('.criteria-indicator'),
+            lowercase: document.getElementById("lowercase-criteria").querySelector('.criteria-indicator'),
+            number: document.getElementById("number-criteria").querySelector('.criteria-indicator'),
+            specialChar: document.getElementById("special-char-criteria").querySelector('.criteria-indicator')
+        };
+
+        password1.addEventListener("input", function() {
+            const val = password1.value;
+            let strength = 0;
+
+            indicators.length.style.backgroundColor = val.length >= 8 ? "green" : "red";
+            strength += val.length >= 8 ? 1 : 0;
+
+            indicators.uppercase.style.backgroundColor = /[A-Z]/.test(val) ? "green" : "red";
+            strength += /[A-Z]/.test(val) ? 1 : 0;
+
+            indicators.lowercase.style.backgroundColor = /[a-z]/.test(val) ? "green" : "red";
+            strength += /[a-z]/.test(val) ? 1 : 0;
+
+            indicators.number.style.backgroundColor = /[0-9]/.test(val) ? "green" : "red";
+            strength += /[0-9]/.test(val) ? 1 : 0;
+
+            indicators.specialChar.style.backgroundColor = /[^a-zA-Z0-9]/.test(val) ? "green" : "red";
+            strength += /[^a-zA-Z0-9]/.test(val) ? 1 : 0;
+
+            if (strength <= 1) {
+                strengthBar.style.width = '33%';
+                strengthBar.style.backgroundColor = 'red';
+            } else if (strength <= 3) {
+                strengthBar.style.width = '66%';
+                strengthBar.style.backgroundColor = 'yellow';
+            } else {
+                strengthBar.style.width = '100%';
+                strengthBar.style.backgroundColor = 'green';
+            }
+        });
+    </script>
+</body>
+
+</html>
