@@ -206,9 +206,11 @@ if __name__ == '__main__':
     sleep(0.7)
     while True:
         # Need the options list for providing an easy way to select an option
+        '''
         stock_ticker = input('Enter in a stock ticker or type q to quit: ')
         if stock_ticker.lower() == 'q':
             exit('Thank you for using the Astro-AI Chatbot.')
+        '''
 
         sleep(0.5)
         # Call scrape step is checked
