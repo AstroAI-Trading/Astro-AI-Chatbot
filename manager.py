@@ -215,10 +215,10 @@ if __name__ == '__main__':
         if stock_ticker.lower() == 'q':
             exit('Thank you for using the Astro-AI Chatbot.')
         sleep(0.5)
+        '''
         # Call scrape step is checked
         scraping_specified_link(f'https://finance.yahoo.com/quote/{stock_ticker}/financials?p={stock_ticker}')
         sleep(0.5)
-        '''
         macro_notebook_path = './macro/macro_test.ipynb'
         # Macro step is checked
         execute_notebook(Path(macro_notebook_path).absolute().resolve())
