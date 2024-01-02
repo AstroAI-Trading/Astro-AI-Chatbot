@@ -2,7 +2,7 @@ import pandas as pd
 import numpy as np
 
 # Load the financial data from the spreadsheet
-file_path = '..\\Astro-AI-Chatbot\\linear_regression\\Files_for_Priming_Sector_Comps\\ANSS_2022_FY_.xlsx'
+file_path = '..\\Astro-AI-Chatbot\\linear_regression\\Files_for_Priming_Sector_Comps\\MVST_2022_FY_RUNINNG.xlsx'
 balance_sheet_sheet_name = 'CONSOLIDATED BALANCE SHEETS'
 balance_sheet = pd.read_excel(file_path, sheet_name=balance_sheet_sheet_name)
 
@@ -14,16 +14,16 @@ notes_payable_2022 = balance_sheet.iloc[19, 1]  # Update row index if needed
 net_debt = notes_payable_2022 - cash_and_equivalents_2022
 
 # Constants - Replace these with your specific assumptions
-REVENUE_GROWTH_RATE = 0.2
+REVENUE_GROWTH_RATE = 0.15
 OPERATING_MARGIN = 0.2
 TAX_RATE = 0.21
-WACC = 0.0921
+WACC = 0.08
 TERMINAL_GROWTH_RATE = 0.02
 FORECAST_PERIOD = 10
-num_shares = 8710000000
+num_shares = 303279188
 
 
-def load_financial_data(file_path, sheet_name='CONSOLIDATED STATEMENTS OF INCO'):
+def load_financial_data(file_path, sheet_name='CONSOLIDATED STATEMENTS OF OPER'):
     income_statement = pd.read_excel(file_path, sheet_name=sheet_name)
     return income_statement
 
@@ -44,7 +44,7 @@ def calculate_price_per_year(income_statement, year):
     present_value_terminal = terminal_value / (1 + WACC) ** FORECAST_PERIOD
     enterprise_value = discounted_cash_flow + present_value_terminal
     equity_value = enterprise_value - net_debt
-    price_per_share = (equity_value / num_shares) * 1000000
+    price_per_share = (equity_value / num_shares) * 1000
     return price_per_share
 
 

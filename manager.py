@@ -233,7 +233,7 @@ if __name__ == '__main__':
         
         stock_ticker = stock_ticker.upper()
 
-        if stock_ticker != 'ANSS' or stock_ticker != 'MVST' or stock_ticker != 'ON':
+        if stock_ticker != 'ANSS' and stock_ticker != 'MVST' and stock_ticker != 'ON':
             stock_ticker = 'ANSS' # default
 
         dcf_assumptions_path = f'./macro/DCF_assumptions_{stock_ticker}.ipynb'
