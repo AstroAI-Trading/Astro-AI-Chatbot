@@ -230,13 +230,26 @@ if __name__ == '__main__':
         # Called momentum here. Keep in mind it's temporary
         comp_momentum.main()
         '''
+        
+        stock_ticker = stock_ticker.upper()
 
-        dcf_assumptions_path = './macro/DCF_assumptions_ANSS.ipynb'
+        if stock_ticker != 'ANSS' or stock_ticker != 'MVST' or stock_ticker != 'ON':
+            stock_ticker = 'ANSS' # default
+
+        dcf_assumptions_path = f'./macro/DCF_assumptions_{stock_ticker}.ipynb'
         # Executed dcf assumptions here
         execute_notebook(Path(dcf_assumptions_path).absolute().resolve())
         sleep(0.3)
         # Execute DCF2
-        DCF2_ANSS.main()
+        dcf_file = None
+        if stock_ticker == 'ANSS':
+            dcf_file = DCF2_ANSS
+        elif stock_ticker == 'MVST':
+            dcf_file = DCF2_MVST
+        else:
+            dcf_file = DCF2_ON
+        
+        dcf_file.main()
 
         '''
         Someone needs to test this code out as the nbcovert library is not working
