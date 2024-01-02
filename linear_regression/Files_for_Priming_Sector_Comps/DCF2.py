@@ -2,7 +2,7 @@ import pandas as pd
 import numpy as np
 
 # Load the financial data from the spreadsheet
-file_path = '..\\Astro-AI-Chatbot\\linear_regression\\Files_for_Priming_Sector_Comps\\MVST_2022_FY_RUNINNG.xlsx'
+file_path = '..\\Astro-AI-Chatbot\\linear_regression\\Files_for_Priming_Sector_Comps\\AAPL_2022_FY_.xlsx'
 balance_sheet_sheet_name = 'CONSOLIDATED BALANCE SHEETS'
 balance_sheet = pd.read_excel(file_path, sheet_name=balance_sheet_sheet_name)
 
@@ -44,7 +44,7 @@ def calculate_price_per_year(income_statement, year):
     present_value_terminal = terminal_value / (1 + WACC) ** FORECAST_PERIOD
     enterprise_value = discounted_cash_flow + present_value_terminal
     equity_value = enterprise_value - net_debt
-    price_per_share = (equity_value / num_shares) * 1000
+    price_per_share = (equity_value / num_shares) * 1000000
     return price_per_share
 
 
