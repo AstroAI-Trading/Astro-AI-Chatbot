@@ -2,7 +2,7 @@ import pandas as pd
 import numpy as np
 
 # Load the financial data from the spreadsheet
-file_path = '..\\Astro-AI-Chatbot\\linear_regression\\Files_for_Priming_Sector_Comps\\AAPL_2022_FY_.xlsx'
+file_path = '..\\Astro-AI-Chatbot\\linear_regression\\Files_for_Priming_Sector_Comps\\ENPH_2022_FY_.xlsx'
 balance_sheet_sheet_name = 'CONSOLIDATED BALANCE SHEETS'
 balance_sheet = pd.read_excel(file_path, sheet_name=balance_sheet_sheet_name)
 
