@@ -14,7 +14,7 @@ from nbformat import read
 from nbconvert import PythonExporter
 from pathlib import Path
 from requests import get
-from linear_regression.Files_for_Priming_Sector_Comps import comp_momentum, DCF2
+from linear_regression.Files_for_Priming_Sector_Comps import comp_momentum, DCF2_ANSS, DCF2_MVST, DCF2_ON
 import pandas as pd
 from collections import OrderedDict
 
@@ -236,7 +236,7 @@ if __name__ == '__main__':
         execute_notebook(Path(dcf_assumptions_path).absolute().resolve())
         sleep(0.3)
         # Execute DCF2
-        DCF2.main()
+        DCF2_ANSS.main()
 
         '''
         Someone needs to test this code out as the nbcovert library is not working
