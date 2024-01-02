@@ -2,7 +2,7 @@ import pandas as pd
 import numpy as np
 
 # Load the financial data from the spreadsheet
-file_path = '..\\Astro-AI-Chatbot\\linear_regression\\Files_for_Priming_Sector_Comps\\NXPI_2022_FY_.xlsx'
+file_path = '..\\Astro-AI-Chatbot\\linear_regression\\Files_for_Priming_Sector_Comps\\ANSS_2022_FY_.xlsx'
 balance_sheet_sheet_name = 'CONSOLIDATED BALANCE SHEETS'
 balance_sheet = pd.read_excel(file_path, sheet_name=balance_sheet_sheet_name)
 
@@ -14,16 +14,16 @@ notes_payable_2022 = balance_sheet.iloc[19, 1]  # Update row index if needed
 net_debt = notes_payable_2022 - cash_and_equivalents_2022
 
 # Constants - Replace these with your specific assumptions
-REVENUE_GROWTH_RATE = 0.15
-OPERATING_MARGIN = 0.20
+REVENUE_GROWTH_RATE = 0.2
+OPERATING_MARGIN = 0.2
 TAX_RATE = 0.21
-WACC = 0.08
+WACC = 0.0921
 TERMINAL_GROWTH_RATE = 0.02
 FORECAST_PERIOD = 10
-num_shares = 303279188
+num_shares = 8710000000
 
 
-def load_financial_data(file_path, sheet_name='CONSOLIDATED STATEMENTS OF OPER'):
+def load_financial_data(file_path, sheet_name='CONSOLIDATED STATEMENTS OF INCO'):
     income_statement = pd.read_excel(file_path, sheet_name=sheet_name)
     return income_statement
 
