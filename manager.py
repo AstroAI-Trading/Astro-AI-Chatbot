@@ -210,7 +210,6 @@ if __name__ == '__main__':
     print("We're happy you're here.")
     sleep(0.7)
     while True:
-        
         # Need the options list for providing an easy way to select an option
         stock_ticker = input('Enter in a stock ticker or type q to quit: ')
         if stock_ticker.lower() == 'q':
@@ -231,7 +230,8 @@ if __name__ == '__main__':
         # Called momentum here. Keep in mind it's temporary
         comp_momentum.main()
         '''
-        dcf_assumptions_path = './macro/DCF_assumptions.ipynb'
+
+        dcf_assumptions_path = './macro/DCF_assumptions_ANSS.ipynb'
         # Executed dcf assumptions here
         execute_notebook(Path(dcf_assumptions_path).absolute().resolve())
         sleep(0.3)
