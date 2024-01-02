@@ -13,7 +13,6 @@ from urllib.parse import urlparse
 from nbformat import read
 from nbconvert import PythonExporter
 from pathlib import Path
-from requests import get
 from linear_regression.Files_for_Priming_Sector_Comps import comp_momentum, DCF2
 
 '''
@@ -54,9 +53,6 @@ def execute_notebook(notebook_path: Path) -> None:
     exec(python_script)
 
 
-def check_scraping_link(link: str) -> bool:
-    response = get(link)
-    return response.ok
 
 
 def scraping_specified_link(link: str) -> None:
@@ -65,8 +61,6 @@ def scraping_specified_link(link: str) -> None:
     # return
 
     # Parse the URL to determine the domain
-    if not check_scraping_link(link):
-        exit('The link is not valid. Exiting the program now.')
 
     domain = urlparse(link).hostname
 
@@ -211,7 +205,6 @@ if __name__ == '__main__':
         if stock_ticker.lower() == 'q':
             exit('Thank you for using the Astro-AI Chatbot.')
         '''
-
         sleep(0.5)
         # Call scrape step is checked
         scraping_specified_link(f'https://finance.yahoo.com/quote/AAPL/financials?p={stock_ticker}')
