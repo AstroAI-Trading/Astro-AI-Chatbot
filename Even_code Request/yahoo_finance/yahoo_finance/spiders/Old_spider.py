@@ -57,14 +57,10 @@
 #                 }
 #
 #         driver.quit()
-
-import pandas as pd
 import scrapy
 from selenium import webdriver
+from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.options import Options
-import os
-
-
 
 class YahooFinanceSpider(scrapy.Spider):
     name = 'yahoo_finance'
@@ -72,11 +68,7 @@ class YahooFinanceSpider(scrapy.Spider):
         'USER_AGENT': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
     }
 
-    def __init__(self, tickers='', start_date='', end_date='', *args, **kwargs):
-        super(YahooFinanceSpider, self).__init__(*args, **kwargs)
-        self.tickers = tickers.split(',')
-        self.start_date = start_date
-        self.end_date = end_date
+    start_urls = []
 
     def start_requests(self):
         for ticker in self.tickers:
@@ -86,7 +78,6 @@ class YahooFinanceSpider(scrapy.Spider):
     def parse(self, response):
         ticker = response.meta['ticker']
         self.log(f'Starting {ticker}')
-
         options = Options()
         options.headless = True
         driver = webdriver.Chrome(options=options)
@@ -96,29 +87,11 @@ class YahooFinanceSpider(scrapy.Spider):
         new_response = scrapy.Selector(text=driver.page_source)
         rows = new_response.css('tbody tr')
         data = {'Date': [], ticker: []}
-
         for row in rows:
             date = row.css('td:nth-child(1) span::text').get()
             close_price = row.css('td:nth-child(6) span::text').get()
-
-
-            # if date and close_price:
-            #     data['Date'].append(date)
-            #     data[ticker].append(close_price)
-
             if date and close_price:
-                yield {
-                    'company': ticker,
-                    'date': date,
-                    'close_price': close_price,
-                }
+                data['Date'].append(date)
+                data[ticker].append(close_price)
         driver.quit()
-        # # Convert the data to a DataFrame
-        # df = pd.DataFrame(data)
-        #
-        # # Save data to a CSV file (append mode)
-        # csv_filename = 'new_data.csv'
-        # df.to_csv(csv_filename, index=False, mode='a', header=not os.path.exists(csv_filename))
-        # self.log(f'Data appended to {csv_filename}')
-
         return data
