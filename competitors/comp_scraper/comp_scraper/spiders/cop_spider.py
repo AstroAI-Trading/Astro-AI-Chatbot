@@ -2,6 +2,7 @@ import scrapy
 from urllib.parse import quote  # Import the quote function to encode special characters
 from comp_scraper.spiders.ListOfCompanies import start_companies
 
+
 class CompetitorsSpider(scrapy.Spider):
     name = 'cop_spider'
     base_url = 'https://www.marketbeat.com/stocks/NASDAQ/{}/competitors-and-alternatives/'
@@ -22,10 +23,13 @@ class CompetitorsSpider(scrapy.Spider):
                 # Process the extracted information as needed
                 self.log(competitors_info)
 
+                # Remove unwanted phrases
+                competitors_info_cleaned = competitors_info.replace(" vs. ", ", ").replace(" and ", " ")
+
                 # Create a dictionary with the information and yield it
                 competitors_data = {
                     'company': response.url.split('/')[-3],  # Extract company name from the URL
-                    'competitors': competitors_info.strip(),
+                    'competitors': competitors_info_cleaned.strip(),
                 }
                 yield competitors_data
 

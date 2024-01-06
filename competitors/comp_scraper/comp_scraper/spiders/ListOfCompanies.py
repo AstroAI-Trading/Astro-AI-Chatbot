@@ -1,6 +1,5 @@
 
 
-
 start_companies = [
     "A", "AA", "AACG", "AACI", "AACIW", "AACT", "AADI", "AAIC", "AAIC^B",
     "AAIC^C", "AAIN", "AAL", "AAMC", "AAME", "AAN", "AAOI", "AAON", "AAP", "AAPL",
@@ -269,7 +268,7 @@ start_companies = [
     "HIE", "HIFS", "HIG", "HIG^G", "HIHO", "HII", "HIMS", "HIMX", "HIO", "HIPO", "HITI",
     "HIVE", "HIW", "HIX", "HKD", "HKIT", "HL", "HL^B", "HLF", "HLI", "HLIO", "HLIT",
     "HLLY", "HLMN", "HLN", "HLNE", "HLP", "HLT", "HLTH", "HLVX", "HLX", "HMC", "HMN",
-    "HMNF", "HMST", "HMY", "HNI", "HNNA", "HNNAZ", "HNRA", "HNRG", "HNST","HNVR", "HNW", "HOFT", "HOFV", "HOFVW", "HOG", "HOLI", "HOLO", "HOLOW", 
+    "HMNF", "HMST", "HMY", "HNI", "HNNA", "HNNAZ", "HNRA", "HNRG", "HNST","HNVR", "HNW", "HOFT", "HOFV", "HOFVW", "HOG", "HOLI", "HOLO", "HOLOW",
     "HOLX", "HOMB", "HON", "HONE", "HOOD", "HOOK", "HOPE", "HOTH",
     "HOUR", "HOUS", "HOV", "HOVNP", "HOWL", "HP", "HPCO", "HPE", "HPF", "HPI", "HPK", "HPKEW", "HPP", "HPP^C", "HPQ", "HPS", "HQH", "HQI", "HQL",
     "HQY", "HR", "HRB", "HRI", "HRL", "HRMY", "HROW", "HROWL", "HROWM", "HRT", "HRTG", "HRTX", "HRYU", "HRZN", "HSAI", "HSBC", "HSCS", "HSDT",
@@ -280,7 +279,7 @@ start_companies = [
     "HYZNW", "HZO", "IAC", "IAE", "IAF", "IAG", "IART", "IAS", "IAUX", "IBCP", "IBEX", "IBIO", "IBKR", "IBM", "IBN", "IBOC", "IBP", "IBRX", "IBTX",
     "ICAD", "ICCC", "ICCH", "ICCM", "ICCT", "ICD", "ICE", "ICFI", "ICG", "ICHR", "ICL", "ICLK", "ICLR", "ICMB", "ICR^A", "ICU", "ICUCW", "ICUI",
     "ICVX", "ID", "IDA", "IDAI", "IDCC", "IDE", "IDEX", "IDN", "IDR", "IDT", "IDXX", "IDYA", "IE", "IEP", "IESC", "IEX", "IFBD", "IFF", "IFIN", "IFN",
-    "IFRX", "IFS", "IGA", "IGC", "IGD", "IGI", "IGIC", "IGMS", "IGR", "IGT", "IGTA", "IGTAW", "IH", "IHD", "IHG", "IHRT", "IHS", "IHT","IHTA", "IIF", 
+    "IFRX", "IFS", "IGA", "IGC", "IGD", "IGI", "IGIC", "IGMS", "IGR", "IGT", "IGTA", "IGTAW", "IH", "IHD", "IHG", "IHRT", "IHS", "IHT","IHTA", "IIF",
     "III", "IIIN", "IIIV", "IIM", "IINN", "IINNW", "IIPR", "IIPR^A",
     "IKNA", "IKT", "ILAG", "ILMN", "ILPT", "IMAB", "IMACW", "IMAQ", "IMAQR", "IMAQW",
     "IMAX", "IMCC", "IMCR", "IMGN", "IMKTA", "IMMP", "IMMR", "IMMX", "IMNM", "IMNN", "IMO",
@@ -541,7 +540,7 @@ start_companies = [
     'SPLP', 'SPLP^A', 'SPNS', 'SPNT', 'SPNT^B', 'SPOK', 'SPOT', 'SPPL', 'SPR',
     'SPRB', 'SPRC', 'SPRO', 'SPRU', 'SPRY', 'SPSC', 'SPT', 'SPTN', 'SPWH',
     'SPWR', 'SPXC', 'SPXX', 'SQ', 'SQFT', 'SQFTP', 'SQFTW', 'SQM', 'SQNS',
-    'SQSP', 'SR', 'SR^A', 'SRAD', 'SRBK', 'SRC', 'SRC^A', 'SRCE', 'SRCL','SRDX', 
+    'SQSP', 'SR', 'SR^A', 'SRAD', 'SRBK', 'SRC', 'SRC^A', 'SRCE', 'SRCL','SRDX',
     'SRE', 'SREA', 'SRFM', 'SRG', 'SRG^A', 'SRI', 'SRL', 'SRM', 'SRPT', 'SRRK',
     'SRT', 'SRTS', 'SRV', 'SRZN', 'SRZNW', 'SSB', 'SSBI', 'SSBK', 'SSD', 'SSIC',
     'SSKN', 'SSL', 'SSNC', 'SSNT', 'SSP', 'SSRM', 'SSSS', 'SSSSL', 'SST', 'SSTI',
