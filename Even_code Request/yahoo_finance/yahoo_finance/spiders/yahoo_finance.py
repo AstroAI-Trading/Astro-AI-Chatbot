@@ -45,6 +45,12 @@
 #         body = driver.find_element(By.TAG_NAME, 'body')
 #         body.send_keys(Keys.END)
 #
+#         # Scroll to the bottom of the page by sending "END" key multiple times
+#         body = driver.find_element(By.TAG_NAME, 'body')
+#         for _ in range(10):  # Adjust the number of iterations as needed
+#             body.send_keys(Keys.END)
+#             time.sleep(5)  # Add a small delay between each scroll
+#
 #         # Add a delay to allow the page to load
 #         time.sleep(15)
 #
@@ -117,7 +123,9 @@ class YahooFinanceSpider(scrapy.Spider):
 
         # Scroll to the bottom of the page
         body = driver.find_element(By.TAG_NAME, 'body')
-        body.send_keys(Keys.END)
+        for _ in range(10):
+          body.send_keys(Keys.END)
+          time.sleep(5)
 
         # Add a delay to allow the page to load
         time.sleep(15)
