@@ -1,10 +1,15 @@
 # import scrapy
 # from selenium import webdriver
+# from selenium.webdriver.chrome.options import Options
+# from selenium.webdriver.common.by import By
+# from selenium.webdriver.support.ui import WebDriverWait
+# from selenium.webdriver.support import expected_conditions as EC
+# import time
+# from selenium.webdriver.common.keys import Keys
+#
+#
 # # Change this line in yahoo_finance.py
 # from yahoo_finance.spiders.ListOfCompanies import start_companies
-#
-# from selenium.webdriver.common.by import By
-# from selenium.webdriver.chrome.options import Options
 #
 # class YahooFinanceSpider(scrapy.Spider):
 #     name = 'yahoo_finance'
@@ -23,23 +28,25 @@
 #             yield scrapy.Request(url, callback=self.parse, meta={'company': company})
 #
 #     def parse(self, response):
-#         # Extract the company from the meta information
 #         company = response.meta['company']
-#
-#         # Print a sentence indicating the starting company
 #         self.log(f'Starting {company}')
 #
 #         options = Options()
-#         options.headless = True  # Use this line to set headless mode
-#
-#         # Specify the path to your Chrome driver executable if it's not in your PATH
-#         # driver = webdriver.Chrome(executable_path='/path/to/chromedriver', options=options)
+#         options.headless = True
 #         driver = webdriver.Chrome(options=options)
 #         driver.get(response.url)
 #
-#         # Scroll to the bottom of the page to load all historical data
-#         driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
-#         driver.implicitly_wait(60)
+#         # Wait for the historical data table to be present
+#         WebDriverWait(driver, 15).until(
+#             EC.presence_of_element_located((By.CSS_SELECTOR, 'tbody tr'))
+#         )
+#
+#         # Scroll to the bottom of the page
+#         body = driver.find_element(By.TAG_NAME, 'body')
+#         body.send_keys(Keys.END)
+#
+#         # Add a delay to allow the page to load
+#         time.sleep(15)
 #
 #         # Get the updated page content
 #         new_response = scrapy.Selector(text=driver.page_source)
@@ -58,18 +65,29 @@
 #
 #         driver.quit()
 
-import pandas as pd
+
+
+# scrapy crawl yahoo_finance -O test.json
 import scrapy
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
-import os
-
-
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.common.keys import Keys
+import  time
 
 class YahooFinanceSpider(scrapy.Spider):
     name = 'yahoo_finance'
     custom_settings = {
-        'USER_AGENT': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
+        'USER_AGENT': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) '
+                      'Chrome/91.0.4472.124 Safari/537.36',
+        'FEEDS': {
+            'output.json': {
+                'format': 'json',
+                'overwrite': True,  # Set this to True to overwrite the file each time
+            },
+        },
     }
 
     def __init__(self, tickers='', start_date='', end_date='', *args, **kwargs):
@@ -83,7 +101,7 @@ class YahooFinanceSpider(scrapy.Spider):
             url = f'https://finance.yahoo.com/quote/{ticker}/history?p={ticker}'
             yield scrapy.Request(url, callback=self.parse, meta={'ticker': ticker})
 
-    def parse(self, response):
+    def parse(self, response, **kwargs):
         ticker = response.meta['ticker']
         self.log(f'Starting {ticker}')
 
@@ -91,20 +109,26 @@ class YahooFinanceSpider(scrapy.Spider):
         options.headless = True
         driver = webdriver.Chrome(options=options)
         driver.get(response.url)
-        driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
-        driver.implicitly_wait(60)
-        new_response = scrapy.Selector(text=driver.page_source)
-        rows = new_response.css('tbody tr')
-        data = {'Date': [], ticker: []}
 
+        # Wait for the historical data table to be present
+        WebDriverWait(driver, 15).until(
+            EC.presence_of_element_located((By.CSS_SELECTOR, 'tbody tr'))
+        )
+
+        # Scroll to the bottom of the page
+        body = driver.find_element(By.TAG_NAME, 'body')
+        body.send_keys(Keys.END)
+
+        # Add a delay to allow the page to load
+        time.sleep(15)
+
+        # Get the updated page content
+        new_response = scrapy.Selector(text=driver.page_source)
+
+        rows = new_response.css('tbody tr')
         for row in rows:
             date = row.css('td:nth-child(1) span::text').get()
             close_price = row.css('td:nth-child(6) span::text').get()
-
-
-            # if date and close_price:
-            #     data['Date'].append(date)
-            #     data[ticker].append(close_price)
 
             if date and close_price:
                 yield {
@@ -112,13 +136,9 @@ class YahooFinanceSpider(scrapy.Spider):
                     'date': date,
                     'close_price': close_price,
                 }
-        driver.quit()
-        # # Convert the data to a DataFrame
-        # df = pd.DataFrame(data)
-        #
-        # # Save data to a CSV file (append mode)
-        # csv_filename = 'new_data.csv'
-        # df.to_csv(csv_filename, index=False, mode='a', header=not os.path.exists(csv_filename))
-        # self.log(f'Data appended to {csv_filename}')
 
-        return data
+        driver.quit()
+
+
+
+

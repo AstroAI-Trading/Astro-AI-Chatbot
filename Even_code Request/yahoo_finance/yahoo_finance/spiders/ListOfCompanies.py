@@ -1,8 +1,9 @@
 
 
 
-# start_companies = [
-#     "A", "AA", "AACG", "AACI", "AACIW", "AACT", "AADI", "AAIC", "AAIC^B",
+start_companies = [
+    "A", "AA", "AACG"] # "AACI", "AACIW",
+#     "AACT", "AADI", "AAIC", "AAIC^B",
 #     "AAIC^C", "AAIN", "AAL", "AAMC", "AAME", "AAN", "AAOI", "AAON", "AAP", "AAPL",
 #     "AAT", "AAU", "AB", "ABAT", "ABBV", "ABCB", "ABCL", "ABCM", "ABEO", "ABEV"]
 #     "ABG", "ABIO", "ABL", "ABLLL","ABLLW", "ABLV", "ABM", "ABNB", "ABOS", "ABR", "ABR^D", "ABR^E", "ABR^F", "ABSI",
