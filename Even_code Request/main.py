@@ -121,6 +121,9 @@ def main():
                     df = pd.concat([df, pd.DataFrame({"Date": [date_data], company_name: [close_price]})],
                                    ignore_index=True)
 
+        # Convert the 'Date' column to the desired format
+        df['Date'] = df['Date'].dt.strftime('%b %d, %Y')
+
         # Fill NaN values with None for a cleaner output
         df = df.where(pd.notna(df), None)
 
